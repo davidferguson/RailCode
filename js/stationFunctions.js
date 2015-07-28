@@ -171,7 +171,7 @@ function switchlines()
 
 function getStationNumberAndBranchNumberFromStationName( stationName )
 {
-	stationname = stationName.toLowerCase();
+	stationName = stationName.toLowerCase();
 	var stationOptions = currentLesson.lines[currentLine].locations.length;
 	for( var x = 0; x < stationOptions; x++ )
 	{
@@ -374,18 +374,23 @@ function moveTrainToStation( whatStation )
 		{
 			theStation = theStation[stationAndBranchNumber.branchNumber[x]];
 		}
-		var stationX = theStation.x;
-		var stationY = theStation.y;
-		
-		//var stationX = currentLesson.lines[currentLine].locations[stationAndBranchNumber.stationNumber][stationAndBranchNumber.branchNumber].x;
-		//var stationY = currentLesson.lines[currentLine].locations[stationAndBranchNumber.stationNumber][stationAndBranchNumber.branchNumber].y;
-		var newCoords = getImageCoords(stationX, stationY);
-		trainImg.style.left = newCoords[0]-4;
-		trainImg.style.top = newCoords[1]-4;
-		updateStationInfo();
-		if( arrivedAtStationCallback )
+		if( ! theStation.disabled )
 		{
-			arrivedAtStationCallback( whatStation );
+			var stationX = theStation.x;
+			var stationY = theStation.y;
+			
+			var newCoords = getImageCoords(stationX, stationY);
+			trainImg.style.left = newCoords[0]-4;
+			trainImg.style.top = newCoords[1]-4;
+			updateStationInfo();
+			if( arrivedAtStationCallback )
+			{
+				arrivedAtStationCallback( whatStation );
+			}
+		}
+		else
+		{
+			alert("Woops!\nThis station is closed! Try and find another route through.");
 		}
 	}
 	else
@@ -438,7 +443,6 @@ function forward()
 			if( theStation.length == 2 )
 			{
 				theStation = theStation[indexToPick][0];
-				testStation = theStation;
 				stationName = theStation.name;
 			}
 			else if( theStation.length == 1 && theStation[0] == 0 )
@@ -954,12 +958,11 @@ function getClosedStations()
 				var currentStationTo = closedStations.to[x].toLowerCase();
 				var currentStationLine = closedStations.lines[x].toLowerCase();
 				
-				for( var y = 0; currentLesson.lines.length; y++ )
+				for( var y = 0; y < currentLesson.lines.length; y++ )
 				{
 					if( currentLesson.lines[y].name = currentStationLine )
 					{
 						// We are using that line!
-						currentLine = currentStationLine;
 						var stationFromInfo = getStationNumberAndBranchNumberFromStationName( currentStationFrom );
 						if( stationFromInfo )
 						{
@@ -967,12 +970,25 @@ function getClosedStations()
 							if( stationToInfo )
 							{
 								// Great! We have found both the from and the to station. Find all the stations in between them.
-								var stationList = getStationsBetweenTwoStations( currentStationFrom, currentStationTo, lineNumber );
+								var stationList = getStationsBetweenTwoStations( currentStationFrom, currentStationTo, y );
+								if( stationList != false )
+								{
+									for( var z = 0; z < stationList.length; z++ )
+									{
+										closeStation( stationList[z], y );
+									}
+								}
+								else
+								{
+									// There was an issue getting the stations. This shouldn't happen, but lets put this code in place, just in case.
+									closeStation( currentStationFrom, y );
+									closeStation( currentStationTo, y );
+								}
 							}
 							else
 							{
 								// We can only find the from station; the to one must be off the map. Just block the from station.
-								
+								closeStation( currentStationFrom, y );
 							}
 						}
 						else
@@ -982,7 +998,7 @@ function getClosedStations()
 							if( stationToInfo )
 							{
 								// We can only find the to station; the from one must be off the map. Just block the to station.
-								
+								closeStation( currentStationTo, y );
 							}
 						}
 					}
@@ -994,43 +1010,217 @@ function getClosedStations()
 	getRequest.send();
 }
 
-function getStationsBetweenTwoStations( startStation, endStation, lineNumber )
+function closeStation( whatStation, stationLine )
+{
+	whatStation = whatStation.toLowerCase();
+	
+	var stationAndBranchNumber = getStationNumberAndBranchNumberFromStationName( whatStation );
+	if( stationAndBranchNumber )
+	{
+		var theStation = currentLesson.lines[stationLine].locations[stationAndBranchNumber.stationNumber];
+		for( var x = 0; x < stationAndBranchNumber.branchNumber.length; x++ )
+		{
+			theStation = theStation[stationAndBranchNumber.branchNumber[x]];
+		}
+		var stationX = theStation.x;
+		var stationY = theStation.y;
+		
+		var newCoords = getImageCoords(stationX, stationY);
+		
+		var backgroundColour = "";
+		switch( currentLesson.lines[stationLine].name )
+		{
+			case "bakerloo":
+				backgroundColour = "#956438";
+				break;
+			case "central":
+				backgroundColour = "#ED1C2F";
+				break;
+			case "circle":
+				backgroundColour = "#FFDE00";
+				break;
+			case "district":
+				backgroundColour = "#009B5A";
+				break;
+			case "hammersmith and city":
+				backgroundColour = "#F3879E";
+				break;
+			case "jubilee":
+				backgroundColour = "#8B8D90";
+				break;
+			case "metropolitan":
+				backgroundColour = "#79014C";
+				break;
+			case "northern":
+				backgroundColour = "#221E1F";
+				break;
+			case "piccadilly":
+				backgroundColour = "#014FA3";
+				break;
+			case "victoria":
+				backgroundColour = "#0095D7";
+				break;
+			case "waterloo and city":
+				backgroundColour = "#79CBBE";
+				break;
+		}
+		crossDiv = document.createElement("DIV");
+		crossDiv.className = "stationCross";
+		crossDiv.innerHTML = "X";
+		crossDiv.style.color = backgroundColour;
+		crossDiv.style.fontSize = "32px";
+		crossDiv.style.fontWeight = 900;
+		crossDiv.style.left = newCoords[0]-12;
+		crossDiv.style.top = newCoords[1]-23;
+		crossDiv.style.position = "absolute";
+		document.getElementById("mapPanel").appendChild(crossDiv); 
+		
+		theStation.disabled = true;
+	}
+	else
+	{
+		alert("Woops! I couldn't find the station '" + whatStation + "'.");
+	}
+}
+
+function getStationsBetweenTwoStations( startStation, endStation, lineNumber, reversed )
 {
 	var prevCurrentStationName = currentStationName;
 	var prevCurrentLine = currentLine;
 	
 	var nextStation;
 	var prevStation;
-	var forwardBranches;
-	var notFound = false;
+	var forwardBranches = [];
+	var notFound = true;
+	var reachedEndOfLine = false;
+	
+	stationList = [[]];
 	
 	currentLine = lineNumber;
 	currentStationName = startStation;
-	while( notFound == true )
+	if( canmoveforwards() )
 	{
-		if( hasForwardBranch() )
+		stationList[stationList.length-1].push(startStation);
+		while( notFound == true )
 		{
-			forwardBranches.push(0);
-			indexToPick = 0;
-		}
-		else
-		{
-			nextStation = getNextStation();
-			stationList[stationList.length].push(nextStation);
-			if( nextStation == endStation )
+			if( hasForwardBranch() )
 			{
-				return formatListWhenFound( stationList );
+				if( reachedEndOfLine == true )
+				{
+					reachedEndOfLine = false;
+					//forwardBranches[forwardBranches.length-1] = 1;
+					//currentStationName = stationList[stationList.length-1][stationList[stationList.length-1].length-1];
+				}
+				else
+				{
+					forwardBranches.push(0);
+				}
+				indexToPick = forwardBranches[forwardBranches.length-1];
+				nextStation = getNextStation();
+				stationList.push([]); // Create new array
+				stationList[stationList.length-1].push(nextStation); // Append station to the array
+				if( nextStation == endStation )
+				{
+					notFound = false;
+					currentStationName = prevCurrentStationName;
+					currentLine = prevCurrentLine;
+					return formatListWhenFound( stationList );
+				}
+				else
+				{
+					if( canmoveforwards() )
+					{
+						currentStationName = nextStation;
+					}
+					else
+					{
+						stationList.splice((stationList.length-1),1);
+						reachedEndOfLine = true;
+						if( forwardBranches[forwardBranches.length-1] == 1 )
+						{
+							// We've been through both of the branches. Go back to the prev one.
+							while( forwardBranches[forwardBranches.length-1] == 1 )
+							{
+								forwardBranches.splice((forwardBranches.length-1), 1);
+								if( forwardBranches.length == 0 )
+								{
+									// That's us back at the beginning. Make sure we don't loop again.
+									notFound = false;
+									break;
+								}
+							}
+						}
+						else
+						{
+							forwardBranches[forwardBranches.length-1] = 1;
+							currentStationName = stationList[stationList.length-1][stationList[stationList.length-1].length-1];
+						}
+					}
+				}
 			}
-		}		
+			else
+			{
+				nextStation = getNextStation();
+				stationList[stationList.length-1].push(nextStation);
+				if( nextStation == endStation )
+				{
+					notFound = false;
+					currentStationName = prevCurrentStationName;
+					currentLine = prevCurrentLine;
+					return formatListWhenFound( stationList );
+				}
+				else
+				{
+					if( canmoveforwards() )
+					{
+						currentStationName = nextStation;
+					}
+					else
+					{
+						stationList.splice((stationList.length-1),1);
+						reachedEndOfLine = true;
+						if( forwardBranches.length != 0 )
+						{
+							if( forwardBranches[forwardBranches.length-1] == 1 )
+							{
+								// We've been through both of the branches. Go back to the prev one.
+								while( forwardBranches[forwardBranches.length-1] == 1 )
+								{
+									forwardBranches.splice((forwardBranches.length-1), 1);
+									if( forwardBranches.length == 0 )
+									{
+										// That's us back at the beginning. Make sure we don't loop again.
+										notFound = false;
+										break;
+									}
+								}
+							}
+							else
+							{
+								forwardBranches[forwardBranches.length-1] = 1;
+								currentStationName = stationList[stationList.length-1][stationList[stationList.length-1].length-1];
+							}
+						}
+						else
+						{
+							break;
+						}
+					}
+				}
+			}		
+		}
 	}
-	if( canmovebackwards() )
+	if( ! reversed )
 	{
-		
+		currentStationName = prevCurrentStationName;
+		currentLine = prevCurrentLine;
+		return getStationsBetweenTwoStations( endStation, startStation, lineNumber, 1 );
 	}
 	else
 	{
-		console.log("OK, we seem to have a problem.");
-		return [startStation, endStation];
+		currentStationName = prevCurrentStationName;
+		currentLine = prevCurrentLine;
+		return false;
 	}
 }
 
