@@ -4,6 +4,7 @@ var arrivedAtStationCallback = false;
 
 var trainStations = [];
 var trainLines = [];
+var closedStationList = [];
 
 // THESE FUNCTIONS ARE FOR THE COMPILER
 function replaceAll(text, strA, strB)
@@ -942,7 +943,7 @@ function toTitleCase(str)
 	}
 }
 
-function getClosedStations()
+function getClosedStations( )
 {
 	var prevCurrentLine = currentLine;
 	var getRequest = new XMLHttpRequest();
@@ -960,7 +961,7 @@ function getClosedStations()
 				
 				for( var y = 0; y < currentLesson.lines.length; y++ )
 				{
-					if( currentLesson.lines[y].name = currentStationLine )
+					if( currentLesson.lines[y].name == currentStationLine )
 					{
 						// We are using that line!
 						var stationFromInfo = getStationNumberAndBranchNumberFromStationName( currentStationFrom );
@@ -970,12 +971,12 @@ function getClosedStations()
 							if( stationToInfo )
 							{
 								// Great! We have found both the from and the to station. Find all the stations in between them.
-								var stationList = getStationsBetweenTwoStations( currentStationFrom, currentStationTo, y );
-								if( stationList != false )
+								closedStationList = getStationsBetweenTwoStations( currentStationFrom, currentStationTo, y );
+								if( closedStationList != false )
 								{
-									for( var z = 0; z < stationList.length; z++ )
+									for( var z = 0; z < closedStationList.length; z++ )
 									{
-										closeStation( stationList[z], y );
+										closeStation( closedStationList[z], y );
 									}
 								}
 								else
@@ -1108,8 +1109,6 @@ function getStationsBetweenTwoStations( startStation, endStation, lineNumber, re
 				if( reachedEndOfLine == true )
 				{
 					reachedEndOfLine = false;
-					//forwardBranches[forwardBranches.length-1] = 1;
-					//currentStationName = stationList[stationList.length-1][stationList[stationList.length-1].length-1];
 				}
 				else
 				{
@@ -1242,4 +1241,211 @@ function formatListWhenFound( listToFormat )
 		}
 	}
 	return totalList;
+}
+
+function generateStartStation()
+{
+	var startStation = "";
+	while( startStation == "" && closedStationList.indexOf(startStation) == -1 )
+	{
+		var theIndex = currentLesson.lines[Math.floor((Math.random() * currentLesson.lines.length))].locations;
+		while( theIndex.length != 1 )
+		{
+			theIndex = theIndex[Math.floor((Math.random() * theIndex.length))];
+		}
+		if( theIndex == 0 || theIndex == [0] || theIndex[0] == 0 )
+		{
+			theIndex = currentLesson.lines[Math.floor((Math.random() * theIndex.length))];
+		}
+		else
+		{
+			startStation = theIndex[0].name;
+		}
+	}
+	return startStation;
+}
+
+function generateEndStation( startStation, endStation, lineNumber )
+{
+	var prevCurrentStationName = currentStationName;
+	var prevCurrentLine = currentLine;
+	
+	var nextStation;
+	var prevStation;
+	
+	currentLine = lineNumber;
+	currentStationName = startStation;
+	var currentDirection = Math.floor((Math.random()*2));
+	if( ( currentDirection == 0 && ! canmoveforwards() ) || ( currentDirection == 1 && ! canmovebackwards() ) )
+	{
+		currentDirection = ! currentDirection;
+	}
+	while( 1 )
+	{
+		if( hasForwardBranch() && currentDirection == 0 )
+		{
+			indexToPick = Math.floor((Math.random()*2));
+			nextStation = getNextStation();
+			if( canmoveforwards() )
+			{
+				if( closedStationList.indexOf(nextStation) == -1 )
+				{
+					currentStationName = nextStation;
+				}
+			}
+			else
+			{
+				if( switchlines().length != 1 )
+				{
+					var possibleLines = [];
+					for( x = 0; x < switchlines().length; x++ )
+					{
+						if( ! switchlines()[x] == currentLesson.lines[currentLine].name )
+						{
+							possibleLines.push( switchlines()[x] );
+						}
+					}
+					var lineToSwitchTo = possibleLines[Math.floor((Math.random()*possibleLines.length))];
+					if( ( lineToSwitchTo != undefined ) || ( lineToSwitchTo == undefined && switchlines().length == 2 ) )
+					{
+						switchLine(lineToSwitchTo);
+						currentDirection = Math.floor((Math.random()*2));
+						if( ( currentDirection == 0 && ! canmoveforwards() ) || ( currentDirection == 1 && ! canmovebackwards() ) )
+						{
+							currentDirection = ! currentDirection;
+						}
+					}
+				}
+				else
+				{
+					var newCurrentStationName = currentStationName;
+					currentStationName = prevCurrentStationName;
+					currentLine = prevCurrentLine;
+					return newCurrentStationName;
+				}
+			}
+		}
+		else if( hasBackwardBranch() && currentDirection == 1 )
+		{
+			indexToPick = Math.floor((Math.random()*2));
+			prevStation = getPrevStation();
+			if( canmovebackwards() )
+			{
+				if( closedStationList.indexOf(prevStation) == -1 )
+				{
+					currentStationName = prevStation;
+				}
+			}
+			else
+			{
+				if( switchlines().length != 1 )
+				{
+					var possibleLines = [];
+					for( x = 0; x < switchlines().length; x++ )
+					{
+						if( ! switchlines()[x] == currentLesson.lines[currentLine].name )
+						{
+							possibleLines.push( switchlines()[x] );
+						}
+					}
+					var lineToSwitchTo = possibleLines[Math.floor((Math.random()*possibleLines.length))];
+					if( ( lineToSwitchTo != undefined ) || ( lineToSwitchTo == undefined && switchlines().length == 2 ) )
+					{
+						switchLine(lineToSwitchTo);
+						currentDirection = Math.floor((Math.random()*2));
+						if( ( currentDirection == 0 && ! canmoveforwards() ) || ( currentDirection == 1 && ! canmovebackwards() ) )
+						{
+							currentDirection = ! currentDirection;
+						}
+					}
+				}
+				else
+				{
+					var newCurrentStationName = currentStationName;
+					currentStationName = prevCurrentStationName;
+					currentLine = prevCurrentLine;
+					return newCurrentStationName;
+				}
+			}
+		}
+		else
+		{
+			nextStation = getNextStation();
+			if( canmoveforwards() && currentDirection == 0 )
+			{
+				if( closedStationList.indexOf(getNextStation()) == -1 )
+				{
+					currentStationName = getNextStation();
+				}
+			}
+			else if( canmovebackwards() && currentDirection == 1 )
+			{
+				if( closedStationList.indexOf(getPrevStation()) == -1 )
+				{
+					currentStationName = getPrevStation();
+				}
+			}
+			else if( switchlines().length != 1 )
+			{
+				var possibleLines = [];
+				for( x = 0; x < switchlines().length; x++ )
+				{
+					if( switchlines()[x] != currentLesson.lines[currentLine].name )
+					{
+						possibleLines.push( switchlines()[x] );
+					}
+				}
+				var lineToSwitchTo = possibleLines[Math.floor((Math.random()*possibleLines.length))];
+				if( ( lineToSwitchTo != undefined ) || ( lineToSwitchTo == undefined && switchlines().length == 2 ) )
+				{
+					switchLine(lineToSwitchTo);
+					currentDirection = Math.floor((Math.random()*2));
+					if( ( currentDirection == 0 && ! canmoveforwards() ) || ( currentDirection == 1 && ! canmovebackwards() ) )
+					{
+						currentDirection = ! currentDirection;
+					}
+				}
+			}
+			else
+			{
+				var newCurrentStationName = currentStationName;
+				currentStationName = prevCurrentStationName;
+				currentLine = prevCurrentLine;
+				return newCurrentStationName;
+			}
+		}
+		if( Math.floor((Math.random()*6)) == 2 && currentStationName != startStation )
+		{
+			if( switchlines().length != 1 )
+			{
+				var possibleLines = [];
+				for( x = 0; x < switchlines().length; x++ )
+				{
+					if( ! switchlines()[x] == currentLesson.lines[currentLine].name )
+					{
+						possibleLines.push( switchlines()[x] );
+					}
+				}
+				var lineToSwitchTo = possibleLines[Math.floor((Math.random()*possibleLines.length))];
+				if( ( lineToSwitchTo != undefined ) || ( lineToSwitchTo == undefined && switchlines().length == 2 ) )
+				{
+					switchLine(lineToSwitchTo);
+					currentDirection = Math.floor((Math.random()*2));
+					if( ( currentDirection == 0 && ! canmoveforwards() ) || ( currentDirection == 1 && ! canmovebackwards() ) )
+					{
+						currentDirection = ! currentDirection;
+					}
+				}
+			}
+		}
+		if( Math.floor((Math.random()*6)) == 4 && currentStationName != startStation )
+		{
+			var newCurrentStationName = currentStationName;
+			currentStationName = prevCurrentStationName;
+			currentLine = prevCurrentLine;
+			return newCurrentStationName;
+		}
+	}
+	currentStationName = prevCurrentStationName;
+	currentLine = prevCurrentLine;
 }
