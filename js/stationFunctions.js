@@ -1273,6 +1273,8 @@ function generateEndStation( startStation, endStation, lineNumber )
 	var nextStation;
 	var prevStation;
 	
+	var movedStations = 0;
+	
 	currentLine = lineNumber;
 	currentStationName = startStation;
 	var currentDirection = Math.floor((Math.random()*2));
@@ -1282,6 +1284,7 @@ function generateEndStation( startStation, endStation, lineNumber )
 	}
 	while( 1 )
 	{
+		movedStations++;
 		if( hasForwardBranch() && currentDirection == 0 )
 		{
 			indexToPick = Math.floor((Math.random()*2));
@@ -1438,7 +1441,7 @@ function generateEndStation( startStation, endStation, lineNumber )
 				}
 			}
 		}
-		if( Math.floor((Math.random()*6)) == 4 && currentStationName != startStation )
+		if( Math.floor((Math.random()*6)) == 4 && currentStationName != startStation && movedStations > 4 )
 		{
 			var newCurrentStationName = currentStationName;
 			currentStationName = prevCurrentStationName;
