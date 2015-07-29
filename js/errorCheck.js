@@ -36,6 +36,8 @@ function checkResult(stepSuccess, tubeStations, tubeEndLine, userCode, error, re
 		}
 		if (stages[currentStage].step[currentStep].endLine != tubeEndLine)
 		{
+			console.log(tubeEndLine);
+			console.log(stages[currentStage].step[currentStep].endLine);
 			console.log(2);
 			continueOn = false;
 		}
@@ -45,6 +47,8 @@ function checkResult(stepSuccess, tubeStations, tubeEndLine, userCode, error, re
 		console.log(stages[currentStage].step[currentStep].stations.length);
 		if (stages[currentStage].step[currentStep].stations.length != 1)
 		{
+			console.log(stages[currentStage].step[currentStep].stations);
+			console.log(tubeStations);
 			for (var i = 0; i < stages[currentStage].step[currentStep].stations.length; i++)
 			{
 				//loop through each string in the mustInclude array
@@ -70,7 +74,7 @@ function checkResult(stepSuccess, tubeStations, tubeEndLine, userCode, error, re
 			for (var i = 0; i < stages[currentStage].step[currentStep].mustInclude.length; i++)
 			{
 				//loop through each string in the mustInclude array
-				if (userCode.indexOf(stages[currentStage].step[currentStep].mustInclude[i]) == -1)
+				if (userCode.toLowerCase().replace(/ the/g, '').replace(/ /g, '').indexOf(stages[currentStage].step[currentStep].mustInclude[i].toLowerCase().replace(/ the/g, '').replace(/ /g, '')) == -1)
 				{
 					console.log(5);
 					continueOn = false;
