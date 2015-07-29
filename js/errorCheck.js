@@ -2,12 +2,13 @@ currentStage = 0; //contains the number (zero-indexed) of the current stage the 
 currentStep = 0; //contains the number (zero-indexed) of the current step the user is on
 mode = ''; //contains the mode (play or learn) that the user is on
 
-function pageLoad(gameMode, stage)
+function pageLoad(gameMode, stage, step)
 {
 	if (gameMode == 'learn')
 	{
 		mode = 'learn';
 		currentStage = stage;
+		currentStep = step;
 		setup(stages[currentStage].step[currentStep].objectToUse, stages[currentStage].step[currentStep].startLine, stages[currentStage].step[currentStep].startStation);
 		document.getElementById('trainInfoPanel').innerHTML = stages[currentStage].step[currentStep].instruction;
 	}
@@ -131,7 +132,7 @@ function nextStep()
 {
 	if (mode == 'learn')
 	{
-		if (stages[currentStage].step.length == currentStep)
+		if (stages[currentStage].step.length - 1 == currentStep)
 		{
 			//we are at the end of a stage
 			if (stages.length == currentStage)
