@@ -76,7 +76,7 @@ function displayCorrect()
 	//this function is run if the user's code was correct for the learn mode
 	//it presents a nice message and asks them to continue
 	
-	document.getElementById('trainInfoPanel').style.background-color = '#BCF5A9';
+	document.getElementById('trainInfoPanel').style.backgroundColor = '#BCF5A9';
 	document.getElementById('trainInfoPanel').firstChild.innerHTML = '<h4>Well Done! You got that spot on.</h4>';
 	document.getElementById('codeButtons').innerHTML = '<button style="width: 100%; height: 100%; background-color: #BCF5A9;" onclick="nextStep();">Continue</button>'
 }
@@ -95,7 +95,7 @@ function displayIncorrect(error)
 		//there is a custom error message that needs to be sent to the user in addition to the standard error message
 		document.getElementById('trainInfoPanel').firstChild.innerHTML = "<h4>Oh dear! That didn't quite work. " + error + ' ' + stages[currentStage].step[currentStep].customError + "</h4>";
 	}
-	document.getElementById('trainInfoPanel').style.background-color = '#F5A9A9';
+	document.getElementById('trainInfoPanel').style.backgroundColor = '#F5A9A9';
 	document.getElementById('codeButtons').innerHTML = '<button style="width: 100%; height: 100%; background-color: #F5A9A9;" onclick="retryStep();">Retry</button>'
 }
 
@@ -125,7 +125,7 @@ function nextStep()
 			//increment up to the next step in the stage
 			currentStep++;
 		}
-		document.getElementById('trainInfoPanel').style.background-color = '#F2F5A9';
+		document.getElementById('trainInfoPanel').style.backgroundColor = '#F2F5A9';
 		document.getElementById('trainInfoPanel').firstChild.innerHTML = '<h4>' + stages[currentStage].step[currentStep].instruction + '</h4>';
 		document.getElementById('codeButtons').innerHTML = '<button style="width: 100%; height: 100%;" onclick="compileAndRun();">Run</button>';
 		
@@ -148,7 +148,7 @@ function retryStep()
 	}
 	else
 	{
-		document.getElementById('trainInfoPanel').style.background-color = '#F2F5A9';
+		document.getElementById('trainInfoPanel').style.backgroundColor = '#F2F5A9';
 		document.getElementById('codeButtons').innerHTML = '<button style="width: 100%; height: 100%;" onclick="compileAndRun();">Run</button>';
 		playSetup();
 	}
