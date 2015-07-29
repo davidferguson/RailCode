@@ -5,6 +5,10 @@ var arrivedAtStationCallback = false;
 var trainStations = [];
 var trainLines = [];
 var closedStationList = [];
+var backupTrainStations = false;
+var errorToReturn = "";
+
+var playFinishedStation;
 
 var currentStationName;
 var currentLine;
@@ -394,7 +398,7 @@ function moveTrainToStation( whatStation )
 		}
 		else
 		{
-			alert("Woops!\nThis station is closed! Try and find another route through.");
+			errorToReturn = "Woops!\nThis station is closed! Try and find another route through.";
 		}
 	}
 	else
@@ -414,7 +418,7 @@ function forward()
 	{
 		trainStations.push("error");
 		trainLines.push("error");
-		alert("Woops!\nThat's the end of the line. You can't go forwards any more.");
+		errorToReturn = "Woops!\nThat's the end of the line. You can't go forwards any more.";
 	}
 	else
 	{
@@ -453,7 +457,7 @@ function forward()
 			{
 				trainStations.push("error");
 				trainLines.push("error");
-				alert("Woops!\nThat's the end of the line. You can't go forwards any more.");
+				errorToReturn = "Woops!\nThat's the end of the line. You can't go forwards any more.";
 			}
 			else
 			{
@@ -482,7 +486,7 @@ function backward()
 	{
 		trainStations.push("error");
 		trainLines.push("error");
-		alert("Woops!\nThat's the end of the line. You can't go backwards any more.");
+		errorToReturn = "Woops!\nThat's the end of the line. You can't go backwards any more.";
 	}
 	else
 	{
@@ -522,7 +526,7 @@ function backward()
 			{
 				trainStations.push("error");
 				trainLines.push("error");
-				alert("Woops!\nThat's the end of the line. You can't go backwards any more.");
+				errorToReturn = "Woops!\nThat's the end of the line. You can't go backwards any more.";
 			}
 			else
 			{
@@ -548,7 +552,7 @@ function switchLine( toWhatLine )
 	{
 		trainStations.push("error");
 		trainLines.push("error");
-		alert("This activity only has 1 line. You can not switch line.");
+		errorToReturn = "This activity only has 1 line. You can not switch line.";
 	}
 	else
 	{
@@ -574,7 +578,7 @@ function switchLine( toWhatLine )
 					{
 						trainStations.push("error");
 						trainLines.push("error");
-						alert("Woops!\nI don't think you can switch to the '" + toWhatLine + "' line at this station.");
+						errorToReturn = "Woops!\nI don't think you can switch to the '" + toWhatLine + "' line at this station.";
 						currentLine = oldCurrentLine;
 					}
 				}
@@ -582,7 +586,7 @@ function switchLine( toWhatLine )
 				{
 					trainStations.push("error");
 					trainLines.push("error");
-					alert("Woops!\nI couldn't switch to the '" + toWhatLine + "' line.");
+					errorToReturn = "Woops!\nI couldn't switch to the '" + toWhatLine + "' line.";
 				}
 			}
 		}
@@ -625,13 +629,13 @@ function switchLine( toWhatLine )
 			{
 				trainStations.push("error");
 				trainLines.push("error");
-				alert("Woops! The current station is only on one line, meaning that you can't switch lines.");
+				errorToReturn = "Woops! The current station is only on one line, meaning that you can't switch lines.";
 			}
 			else
 			{
 				trainStations.push("error");
 				trainLines.push("error");
-				alert("Woops! The current station has more than three lines crossing it, meaning that there is more than one possibility to switch onto. You'll need to specify which one you want.");
+				errorToReturn = "Woops! The current station has more than three lines crossing it, meaning that there is more than one possibility to switch onto. You'll need to specify which one you want.";
 			}
 		}
 	}
@@ -869,6 +873,11 @@ function hasBackwardBranch()
 
 function executeTrain()
 {
+	console.log(backupTrainStations);
+	if( ! backupTrainStations )
+	{
+		backupTrainStations = trainStations;
+	}
 	currentLine = trainLines[0];
 	currentStationName = trainStations[0];
 	if( currentStationName != "error" )
@@ -880,6 +889,14 @@ function executeTrain()
 		{
 			setTimeout(executeTrain ,1000);
 		}
+		else
+		{
+			checkResult( 1, backupTrainStations, currentLine, document.getElementById("railcodeCode").value, errorToReturn, playFinishedStation );
+		}
+	}
+	else
+	{
+		checkResult( 0, backupTrainStations, currentLine, document.getElementById("railcodeCode").value, errorToReturn, playFinishedStation );
 	}
 }
 
@@ -1506,6 +1523,7 @@ function playSetup()
 			var endStation = generateEndStation( startStation, currentLine );
 			endLine = endStation[1];
 			endStation = endStation[0];
+			playFinishedStation = endStation;
 			console.log("GET TO " + endStation + " ON LINE " + currentActivity.lines[endLine].name);
 			document.getElementById("mapImg").style.display = "block";
 			currentStationName = startStation;
