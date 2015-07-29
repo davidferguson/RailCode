@@ -44,8 +44,8 @@ var waterloo = {
 		{
 			name: "waterloo and city",
 			locations: [
-				[{name:"bank", x:204, y:23}],
-				[{name:"waterloo", x:24, y:286}]
+				[{name:"waterloo", x:24, y:286}],
+				[{name:"bank", x:204, y:23}]
 			]
 		}
 	]
