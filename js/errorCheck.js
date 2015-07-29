@@ -21,7 +21,6 @@ function pageLoad(gameMode, stage)
 
 function checkResult(stepSuccess, tubeStations, tubeEndLine, userCode, error, requiredStation)
 {
-	console.log(tubeStations);
 	//this function is run when the user has typed their code, pressed 'Run Code', and the code has been compiled and run
 	
 	var continueOn = true;
@@ -40,6 +39,9 @@ function checkResult(stepSuccess, tubeStations, tubeEndLine, userCode, error, re
 			continueOn = false;
 		}
 		
+		
+		console.log("LENGTH");
+		console.log(stages[currentStage].step[currentStep].stations.length);
 		if (stages[currentStage].step[currentStep].stations.length != 1)
 		{
 			for (var i = 0; i < stages[currentStage].step[currentStep].stations.length; i++)
@@ -62,14 +64,16 @@ function checkResult(stepSuccess, tubeStations, tubeEndLine, userCode, error, re
 				continueOn = false;
 			}
 		}
-		
-		for (var i = 0; i < stages[currentStage].step[currentStep].mustInclude.length; i++)
+		if( stages[currentStage].step[currentStep].mustInclude != undefined )
 		{
-			//loop through each string in the mustInclude array
-			if (userCode.indexOf(stages[currentStage].step[currentStep].mustInclude[i]) == -1)
+			for (var i = 0; i < stages[currentStage].step[currentStep].mustInclude.length; i++)
 			{
-				console.log(5);
-				continueOn = false;
+				//loop through each string in the mustInclude array
+				if (userCode.indexOf(stages[currentStage].step[currentStep].mustInclude[i]) == -1)
+				{
+					console.log(5);
+					continueOn = false;
+				}
 			}
 		}
 	}
@@ -101,7 +105,8 @@ function displayCorrect()
 	
 	document.getElementById('trainInfoPanel').style.backgroundColor = '#BCF5A9';
 	document.getElementById('trainInfoPanel').innerHTML = 'Well Done! You got that spot on.';
-	document.getElementById('codeButtons').innerHTML = '<button style="width: 100%; height: 100%; background-color: #BCF5A9;" onclick="nextStep();">Continue</button>'
+	document.getElementById('codeButtons').innerHTML = '<button style="width: 100%; height: 100%; background-color: #BCF5A9;" onclick="nextStep();">Continue</button>';
+	document.getElementById("railcodeCode").value = "";
 }
 
 function displayIncorrect(error)
@@ -168,11 +173,12 @@ function retryStep()
 	if (mode == 'learn')
 	{
 		setup(stages[currentStage].step[currentStep].objectToUse, stages[currentStage].step[currentStep].startLine, stages[currentStage].step[currentStep].startStation);
+		document.getElementById('trainInfoPanel').innerHTML = stages[currentStage].step[currentStep].instruction;
 	}
 	else
 	{
-		document.getElementById('trainInfoPanel').style.backgroundColor = '#F2F5A9';
-		document.getElementById('codeButtons').innerHTML = '<button style="width: 100%; height: 100%;" onclick="compileAndRun();">Run</button>';
 		playSetup();
 	}
+	document.getElementById('trainInfoPanel').style.backgroundColor = '#F2F5A9';
+	document.getElementById('codeButtons').innerHTML = '<button style="width: 100%; height: 100%;" onclick="compileAndRun();">Run</button>';
 }
