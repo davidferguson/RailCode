@@ -55,7 +55,7 @@ var stages = [
 			mustInclude: ['forwards\nforwards\nforwards\nforwards\nforwards\nforwards\nforwards\nforwards\nforwards\nforwards\nforwards\nforwards'],
 			stepSuccess: true,
 			startStation: 'warwick avenue',
-			stations: ["paddington', 'edgware road', 'marylebone', 'baker street', 'regent\'s park', 'oxford circus', 'piccadilly circus', 'charing cross', 'embankment', 'waterloo', 'lambeth north', 'elephant & castle"],
+			stations: ['paddington', 'edgware road', 'marylebone', 'baker street', 'regent\'s park', 'oxford circus', 'piccadilly circus', 'charing cross', 'embankment', 'waterloo', 'lambeth north', 'elephant & castle'],
 			startLine: '0',
 			endLine: '0',
 			objectToUse: bakerloo
