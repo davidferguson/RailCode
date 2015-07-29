@@ -33,7 +33,7 @@ function checkResult(stepSuccess, tubeStations, tubeEndLine, userCode, error, re
 		
 		if (stages[currentStage].step[currentStep].stations.length != 1)
 		{
-			for (int i = 0; i < stages[currentStage].step[currentStep].stations.length; i++)
+			for (var i = 0; i < stages[currentStage].step[currentStep].stations.length; i++)
 			{
 				//loop through each string in the mustInclude array
 				if (stages[currentStage].step[currentStep].stations[i] != tubeStations[i]) {continueOn = false;}
@@ -44,7 +44,7 @@ function checkResult(stepSuccess, tubeStations, tubeEndLine, userCode, error, re
 			if (stages[currentStage].step[currentStep].stations[stages[currentStage].step[currentStep].stations.length -1] != tubeStations[tubeStations.length -1]) {continueOn = false;}
 		}
 		
-		for (int i = 0; i < stages[currentStage].step[currentStep].mustInclude.length; i++)
+		for (var i = 0; i < stages[currentStage].step[currentStep].mustInclude.length; i++)
 		{
 			//loop through each string in the mustInclude array
 			if (userCode.indexOf(stages[currentStage].step[currentStep].mustInclude[i]) == -1)
