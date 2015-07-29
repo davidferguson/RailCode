@@ -1,0 +1,155 @@
+currentStage = 0; //contains the number (zero-indexed) of the current stage the user is on
+currentStep = 0; //contains the number (zero-indexed) of the current step the user is on
+mode = ''; //contains the mode (play or learn) that the user is on
+
+function pageLoad(gameMode, stage)
+{
+	if (gameMode == 'learn')
+	{
+		mode = 'learn';
+		currentStage = stage;
+		setup(stages[currentStage].step[currentStep].objectToUse, stages[currentStage].step[currentStep].startLine, stages[currentStage].step[currentStep].startStation);
+	}
+	else
+	{
+		mode = 'play';
+		generatePlayValues();
+		playSetup();
+	}
+}
+
+function checkResult(stepSuccess, tubeStations, tubeEndLine, userCode, error, requiredStation)
+{
+	//this function is run when the user has typed their code, pressed 'Run Code', and the code has been compiled and run
+	
+	var continueOn = true;
+	
+	if (mode == "learn")
+	{
+		//code to be run to check the users attempt during the LEARN mode
+		
+		if (stages[currentStage].step[currentStep].stepSuccess != stepSuccess) {continueOn = false;}
+		if (stages[currentStage].step[currentStep].endLine != tubeEndLine) {continueOn = false;}
+		
+		if (stages[currentStage].step[currentStep].stations.length != 1)
+		{
+			for (int i = 0; i < stages[currentStage].step[currentStep].stations.length; i++)
+			{
+				//loop through each string in the mustInclude array
+				if (stages[currentStage].step[currentStep].stations[i] != tubeStations[i]) {continueOn = false;}
+			}
+		}
+		else
+		{
+			if (stages[currentStage].step[currentStep].stations[stages[currentStage].step[currentStep].stations.length -1] != tubeStations[tubeStations.length -1]) {continueOn = false;}
+		}
+		
+		for (int i = 0; i < stages[currentStage].step[currentStep].mustInclude.length; i++)
+		{
+			//loop through each string in the mustInclude array
+			if (userCode.indexOf(stages[currentStage].step[currentStep].mustInclude[i]) == -1)
+			{
+				continueOn = false;
+			}
+		}
+	}
+	else
+	{
+		//code to be run to check the user's attempt during the PLAY mode
+		if (!stepSuccess) {continueOn = false;}
+		if (tubeStations[tubeStations.length -1] != requiredStation) {continueOn = false;}
+	}
+	if (continueOn)
+	{
+		//the user's code was correct, proceed to the next step or load another play image
+		displayCorrect();
+	}
+	else
+	{
+		//the user's code was incorrect, give an error and ask to retry
+		displayIncorrect(error);
+	}
+}
+
+function displayCorrect()
+{
+	//this function is run if the user's code was correct for the learn mode
+	//it presents a nice message and asks them to continue
+	
+	document.getElementById('trainInfoPanel').style.background-color = '#BCF5A9';
+	document.getElementById('trainInfoPanel').firstChild.innerHTML = '<h4>Well Done! You got that spot on.</h4>';
+	document.getElementById('codeButtons').innerHTML = '<button style="width: 100%; height: 100%; background-color: #BCF5A9;" onclick="nextStep();">Continue</button>'
+}
+
+function displayIncorrect(error)
+{
+	//this function is run if the user's code was incorrect for the learn mode
+	//it presents an error message and asks them to retry
+	
+	if (!stages[currentStage].step[currentStep].hasOwnProperty(customError) || error == '')
+	{
+		document.getElementById('trainInfoPanel').firstChild.innerHTML = "<h4>Oh dear! That didn't quite work.</h4>";
+	}
+	else
+	{
+		//there is a custom error message that needs to be sent to the user in addition to the standard error message
+		document.getElementById('trainInfoPanel').firstChild.innerHTML = "<h4>Oh dear! That didn't quite work. " + error + ' ' + stages[currentStage].step[currentStep].customError + "</h4>";
+	}
+	document.getElementById('trainInfoPanel').style.background-color = '#F5A9A9';
+	document.getElementById('codeButtons').innerHTML = '<button style="width: 100%; height: 100%; background-color: #F5A9A9;" onclick="retryStep();">Retry</button>'
+}
+
+function nextStep()
+{
+	if (mode == 'learn')
+	{
+		if (stages[currentStage].step.length == currentStep)
+		{
+			//we are at the end of a stage
+			if (stages.length == currentStage)
+			{
+				//the user has completed all the levels
+				//WE ARE HERE
+			}
+			else
+			{
+				//go to the next stage
+				currentStage++;
+				currentStep = 0;
+				//Don't forget to update the user's progress in the DB
+				//WE ARE HERE
+			}
+		}
+		else
+		{
+			//increment up to the next step in the stage
+			currentStep++;
+		}
+		document.getElementById('trainInfoPanel').style.background-color = '#F2F5A9';
+		document.getElementById('trainInfoPanel').firstChild.innerHTML = '<h4>' + stages[currentStage].step[currentStep].instruction + '</h4>';
+		document.getElementById('codeButtons').innerHTML = '<button style="width: 100%; height: 100%;" onclick="compileAndRun();">Run</button>';
+		
+		//Now send the object, line and station to the function that handles all the map loading
+		setup(stages[currentStage].step[currentStep].objectToUse, stages[currentStage].step[currentStep].startLine, stages[currentStage].step[currentStep].startStation);
+	}
+	else
+	{
+		//this is play mode
+		generatePlayValues();
+		playSetup();
+	}
+}
+
+function retryStep()
+{
+	if (mode == 'learn')
+	{
+		setup(stages[currentStage].step[currentStep].objectToUse, stages[currentStage].step[currentStep].startLine, stages[currentStage].step[currentStep].startStation);
+	}
+	else
+	{
+		document.getElementById('trainInfoPanel').style.background-color = '#F2F5A9';
+		document.getElementById('codeButtons').innerHTML = '<button style="width: 100%; height: 100%;" onclick="compileAndRun();">Run</button>';
+		playSetup();
+	}
+}
