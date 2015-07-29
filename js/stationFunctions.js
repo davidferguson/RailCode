@@ -25,11 +25,22 @@ function replaceAll(text, strA, strB)
 var http = new XMLHttpRequest();
 function compileAndRun()
 {
+	trainStations = [];
+	trainLines = [];
+	backupTrainStations = false;
+	errorToReturn = "";
 	var codeToCompile = document.getElementById("railcodeCode").value;
-	http.open('get', '/compiler/compiler.php?script=' + encode64( codeToCompile ), false);
-	http.send( null );
-	var javascriptCode = replaceAll( http.responseText, "\\\"", "\"" );
-	eval(javascriptCode);
+	if( codeToCompile == "" )
+	{
+		checkResult( 1, [], currentLine, "", "", "" );
+	}
+	else
+	{
+		http.open('get', '/compiler/compiler.php?script=' + encode64( codeToCompile ), false);
+		http.send( null );
+		var javascriptCode = replaceAll( http.responseText, "\\\"", "\"" );
+		eval(javascriptCode);
+	}
 }
 // END OF THE COMPILER FUNCTIONS
 
@@ -358,6 +369,10 @@ function oldsetup()
 
 function setup( activity, startLine, startStation )
 {
+	console.log("SETTING UP");
+	console.log(activity);
+	console.log(startLine);
+	console.log(startStation);
 	currentActivity = activity;
 	document.getElementById("mapImg").src = currentActivity.image;
 	document.getElementById("mapImg").onload = function()
@@ -873,10 +888,10 @@ function hasBackwardBranch()
 
 function executeTrain()
 {
-	console.log(backupTrainStations);
 	if( ! backupTrainStations )
 	{
-		backupTrainStations = trainStations;
+		backupTrainStations = "";
+		backupTrainStations = trainStations.slice();
 	}
 	currentLine = trainLines[0];
 	currentStationName = trainStations[0];
@@ -1524,7 +1539,6 @@ function playSetup()
 			endLine = endStation[1];
 			endStation = endStation[0];
 			playFinishedStation = endStation;
-			console.log("GET TO " + endStation + " ON LINE " + currentActivity.lines[endLine].name);
 			document.getElementById("mapImg").style.display = "block";
 			currentStationName = startStation;
 			moveTrainToStation( currentStationName );
