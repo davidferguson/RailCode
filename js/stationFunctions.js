@@ -943,7 +943,7 @@ function toTitleCase(str)
 	}
 }
 
-function getClosedStations( )
+function getClosedStations( callback )
 {
 	var prevCurrentLine = currentLine;
 	var getRequest = new XMLHttpRequest();
@@ -953,59 +953,67 @@ function getClosedStations( )
 		if (getRequest.status === 200)
 		{
 			var closedStations = JSON.parse(getRequest.responseText);
-			for( var x = 0; x < closedStations.lines.length; x++ )
+			if( closedStations.lines )
 			{
-				var currentStationFrom = closedStations.from[x].toLowerCase();
-				var currentStationTo = closedStations.to[x].toLowerCase();
-				var currentStationLine = closedStations.lines[x].toLowerCase();
-				
-				for( var y = 0; y < currentLesson.lines.length; y++ )
+				for( var x = 0; x < closedStations.lines.length; x++ )
 				{
-					if( currentLesson.lines[y].name == currentStationLine )
+					var currentStationFrom = closedStations.from[x].toLowerCase();
+					var currentStationTo = closedStations.to[x].toLowerCase();
+					var currentStationLine = closedStations.lines[x].toLowerCase();
+					
+					for( var y = 0; y < currentLesson.lines.length; y++ )
 					{
-						// We are using that line!
-						var stationFromInfo = getStationNumberAndBranchNumberFromStationName( currentStationFrom );
-						if( stationFromInfo )
+						if( currentLesson.lines[y].name == currentStationLine )
 						{
-							var stationToInfo = getStationNumberAndBranchNumberFromStationName( currentStationTo );
-							if( stationToInfo )
+							currentLine = y;
+							// We are using that line!
+							var stationFromInfo = getStationNumberAndBranchNumberFromStationName( currentStationFrom );
+							if( stationFromInfo )
 							{
-								// Great! We have found both the from and the to station. Find all the stations in between them.
-								closedStationList = getStationsBetweenTwoStations( currentStationFrom, currentStationTo, y );
-								if( closedStationList != false )
+								var stationToInfo = getStationNumberAndBranchNumberFromStationName( currentStationTo );
+								if( stationToInfo )
 								{
-									for( var z = 0; z < closedStationList.length; z++ )
+									// Great! We have found both the from and the to station. Find all the stations in between them.
+									closedStationList = getStationsBetweenTwoStations( currentStationFrom, currentStationTo, y );
+									if( closedStationList != false )
 									{
-										closeStation( closedStationList[z], y );
+										for( var z = 0; z < closedStationList.length; z++ )
+										{
+											closeStation( closedStationList[z], y );
+										}
+									}
+									else
+									{
+										// There was an issue getting the stations. This shouldn't happen, but lets put this code in place, just in case.
+										closeStation( currentStationFrom, y );
+										closeStation( currentStationTo, y );
 									}
 								}
 								else
 								{
-									// There was an issue getting the stations. This shouldn't happen, but lets put this code in place, just in case.
+									// We can only find the from station; the to one must be off the map. Just block the from station.
 									closeStation( currentStationFrom, y );
-									closeStation( currentStationTo, y );
 								}
 							}
 							else
 							{
-								// We can only find the from station; the to one must be off the map. Just block the from station.
-								closeStation( currentStationFrom, y );
-							}
-						}
-						else
-						{
-							// Can't find that station, try the to one then.
-							var stationToInfo = getStationNumberAndBranchNumberFromStationName( currentStationTo );
-							if( stationToInfo )
-							{
-								// We can only find the to station; the from one must be off the map. Just block the to station.
-								closeStation( currentStationTo, y );
+								// Can't find that station, try the to one then.
+								var stationToInfo = getStationNumberAndBranchNumberFromStationName( currentStationTo );
+								if( stationToInfo )
+								{
+									// We can only find the to station; the from one must be off the map. Just block the to station.
+									closeStation( currentStationTo, y );
+								}
 							}
 						}
 					}
 				}
+				currentLine = prevCurrentLine;
 			}
-			currentLine = prevCurrentLine;
+		}
+		if( callback )
+		{
+			callback();
 		}
 	};
 	getRequest.send();
@@ -1273,8 +1281,6 @@ function generateEndStation( startStation, endStation, lineNumber )
 	var nextStation;
 	var prevStation;
 	
-	var movedStations = 0;
-	
 	currentLine = lineNumber;
 	currentStationName = startStation;
 	var currentDirection = Math.floor((Math.random()*2));
@@ -1284,7 +1290,6 @@ function generateEndStation( startStation, endStation, lineNumber )
 	}
 	while( 1 )
 	{
-		movedStations++;
 		if( hasForwardBranch() && currentDirection == 0 )
 		{
 			indexToPick = Math.floor((Math.random()*2));
@@ -1441,7 +1446,7 @@ function generateEndStation( startStation, endStation, lineNumber )
 				}
 			}
 		}
-		if( Math.floor((Math.random()*6)) == 4 && currentStationName != startStation && movedStations > 4 )
+		if( Math.floor((Math.random()*6)) == 4 && currentStationName != startStation )
 		{
 			var newCurrentStationName = currentStationName;
 			currentStationName = prevCurrentStationName;
