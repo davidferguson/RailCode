@@ -26,7 +26,12 @@
 			}
 			#trainInfoPanel {
 				height: 15%;
-				background-color: yellow;
+				background-color: #F3F781;
+				overflow-y: scroll;
+				padding-top: 5px;
+				padding-bottom: 5px;
+				padding-left: 10px;
+				padding-right: 10px;
 			}
 			#codeMapPanel {
 				height: calc(85% - 40px);
@@ -98,9 +103,7 @@
 		</nav>
 		<div class="container" style="margin-top:20px;">
 			<div class="row" id="trainInfoPanel">
-				<div class="col-md-12">
-					<h4>Train Information Panel</h4>
-				</div>
+				Well done! The tube has just moved back from <i>Bank</i> to <i>Waterloo</i>. To find out which station is <b>forwards</b> and which station is <b>backwards</b>, take a look at the 'Next Station' and 'Previous Station'  boxes in the top right of the map area. The station displayed in the 'Next' box, and all the ones after it on the line are the ones you will go to with <b>forwards</b>, the 'Previous' box is for <b>backwards</b>. If <i>NA</i> is displayed, the tube cannot move in that direction. Click 'Run' to continue. (No need to type anything)
 			</div>
 			<div class="row" id="codeMapPanel">
 				<div class="col-md-4" id="codePanel">
@@ -125,5 +128,7 @@
 		<script type="text/javascript" src="/compiler/base64.js">Unable to load Base64 Codec Library...</script>
 		<script src="/js/stationLocations.js"></script>
 		<script src="/js/stationFunctions.js"></script>
+		<script src="/js/learnObject.js"></script>
+		<script src="/js/errorCheck.js"></script>
 	</body>
 </html>
