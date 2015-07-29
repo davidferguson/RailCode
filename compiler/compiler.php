@@ -564,27 +564,11 @@ function compileLine( $tokens )
 			
 			break;
 		
-		case "forward":
-			$source = "forward();\n";
-			break;
-		
 		case "forwards":
 			$source = "forward();\n";
 			break;
 		
-		case "fd":
-			$source = "forward();\n";
-			break;
-		
-		case "backward":
-			$source = "backward();\n";
-			break;
-		
 		case "backwards":
-			$source = "backward();\n";
-			break;
-		
-		case "bk":
 			$source = "backward();\n";
 			break;
 		
