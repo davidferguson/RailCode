@@ -31,7 +31,7 @@ var stages = [
 			objectToUse: waterloo
 		},
 		{
-			instruction: "We have now changed to the <span class='instructionNameText'>Bakerloo Line</span>. The tube is at <span class='instructionNameText'>Paddington</span> station. It needs to go to <span class='instructionNameText'>Marylebone</span> station. Type <span class='instructionCodeText'>forwards</span>, then <span class='instructionCodeText'>forward</span> again on a new line and click 'Run'.",
+			instruction: "We have now changed to the <span class='instructionNameText'>Bakerloo Line</span>. The tube is at <span class='instructionNameText'>Paddington</span> station. It needs to go to <span class='instructionNameText'>Marylebone</span> station. Type <span class='instructionCodeText'>forwards</span>, then <span class='instructionCodeText'>forwards</span> again on a new line and click 'Run'.",
 			mustInclude: ['forwards\nforwards'],
 			stepSuccess: true,
 			startStation: 'paddington',
@@ -66,7 +66,7 @@ var stages = [
 	step: [
 		{
 			instruction: "Welcome back! As you can see, your tube is still at <span class='instructionNameText'>Elephant and Castle</span> station. But now it is needed at <span class='instructionNameText'>Harrow and Wealdstone</span> station, right at the start of the <span class='instructionNameText'>Bakerloo Line</span>. Move your tube to <span class='instructionNameText'>Harrow and Wealdstone</span>, please.",
-			mustInclude: ['backwards\nbackwards\nbackwards\nbackwards\nbackwards\nbackwards\nbackwards\nbackwards\nbackwards\nbackwards\nbackwards\nbackwards\nbackwards\nbackwards\nbackwards\nbackwards\nbackwards\nbackwards\nbackwards\nbackwards\nbackwards\nbackwards\nbackwards\nbackwards\n'],
+			mustInclude: ['backwards\nbackwards\nbackwards\nbackwards\nbackwards\nbackwards\nbackwards\nbackwards\nbackwards\nbackwards\nbackwards\nbackwards\nbackwards\nbackwards\nbackwards\nbackwards\nbackwards\nbackwards\nbackwards\nbackwards\nbackwards\nbackwards\nbackwards\nbackwards'],
 			stepSuccess: true,
 			startStation: 'elephant & castle',
 			stations: ['lambeth north', 'waterloo', 'embankment', 'charing cross', 'piccadilly circus', 'oxford circus', 'regent\'s park', 'baker street', 'marylebone', 'edgware road', 'paddington', 'warwick avenue', 'maida vale', 'kilburn park', 'queen\'s park', 'kensal green', 'willesden junction', 'harlesden', 'stonebridge park', 'wembley central', 'north wembley', 'south kenton', 'kenton', 'harrow & wealdstone'],
@@ -76,7 +76,7 @@ var stages = [
 		},
 		{
 			instruction: "Excellent! Only, now your tube is needed again at <span class='instructionNameText'>Elephant and Castle</span> station. If you don't mind, please move your tube back to <span class='instructionNameText'>Elephant and Castle</span>.",
-			mustInclude: ['forwards\nforwards\nforwards\nforwards\nforwards\nforwards\nforwards\nforwards\nforwards\nforwards\nforwards\nforwards\nforwards\nforwards\nforwards\nforwards\nforwards\nforwards\nforwards\nforwards\nforwards\nforwards\nforwards\nforwards\n'],
+			mustInclude: ['forwards\nforwards\nforwards\nforwards\nforwards\nforwards\nforwards\nforwards\nforwards\nforwards\nforwards\nforwards\nforwards\nforwards\nforwards\nforwards\nforwards\nforwards\nforwards\nforwards\nforwards\nforwards\nforwards\nforwards'],
 			stepSuccess: true,
 			startStation: 'harrow & wealdstone',
 			stations: ['kenton', 'south kenton', 'north wembley', 'wembley central', 'stonebridge park', 'harlesden', 'willesden junction', 'kensal green', 'queen\'s park', 'kilburn park', 'maida vale', 'warwick avenue', 'paddington', 'edgware road', 'marylebone', 'baker street', 'regent\'s park', 'oxford circus', 'piccadilly circus', 'charing cross', 'embankment', 'waterloo', 'lambeth north', 'elephant & castle'],
@@ -85,8 +85,8 @@ var stages = [
 			objectToUse: bakerloo
 		},
 		{
-			instruction: "Hmm.. Your tube is needed again at <span class='instructionNameText'>Harrow and Wealdstone</span> station, but I think there is a faster way to do this. Type <span class='instructionCodeText'>repeat 14 times</span>, take a new line, type <span class='instructionCodeText'>backward</span>, take another new line, and type <span class='instructionCodeText'>end repeat</span>. Click 'Run' now - can you guess what will happen?",
-			mustInclude: ['repeat 14 times\nbackwards\nend repeat'],
+			instruction: "Hmm.. Your tube is needed again at <span class='instructionNameText'>Harrow and Wealdstone</span> station, but I think there is a faster way to do this. Type <span class='instructionCodeText'>repeat 24 times</span>, take a new line, type <span class='instructionCodeText'>backwards</span>, take another new line, and type <span class='instructionCodeText'>end repeat</span>. Click 'Run' now - can you guess what will happen?",
+			mustInclude: ['repeat 24 times\nbackwards\nend repeat'],
 			stepSuccess: true,
 			startStation: 'elephant & castle',
 			stations: ['lambeth north', 'waterloo', 'embankment', 'charing cross', 'piccadilly circus', 'oxford circus', 'regent\'s park', 'baker street', 'marylebone', 'edgware road', 'paddington', 'warwick avenue', 'maida vale', 'kilburn park', 'queen\'s park', 'kensal green', 'willesden junction', 'harlesden', 'stonebridge park', 'wembley central', 'north wembley', 'south kenton', 'kenton', 'harrow & wealdstone'],
@@ -95,8 +95,8 @@ var stages = [
 			objectToUse: bakerloo
 		},
 		{
-			instruction: "Fantastic! You accomplished in three lines what originally took you 14. Did you guess that what you type between <span class='instructionCodeText'>repeat 14 times</span> and <span class='instructionCodeText'>end repeat</span> will be run 14 times? Use this new power to move your tube to <span class='instructionNameText'>Elephant and Castle</span>.",
-			mustInclude: ['repeat 14 times\nforwards\nend repeat'],
+			instruction: "Fantastic! You accomplished in three lines what originally took you 24. Did you guess that what you type between <span class='instructionCodeText'>repeat 24 times</span> and <span class='instructionCodeText'>end repeat</span> will be run 24 times? Use this new power to move your tube to <span class='instructionNameText'>Elephant and Castle</span>.",
+			mustInclude: ['repeat 24 times\nforwards\nend repeat'],
 			stepSuccess: true,
 			startStation: 'harrow & wealdstone',
 			stations: ['kenton', 'south kenton', 'north wembley', 'wembley central', 'stonebridge park', 'harlesden', 'willesden junction', 'kensal green', 'queen\'s park', 'kilburn park', 'maida vale', 'warwick avenue', 'paddington', 'edgware road', 'marylebone', 'baker street', 'regent\'s park', 'oxford circus', 'piccadilly circus', 'charing cross', 'embankment', 'waterloo', 'lambeth north', 'elephant & castle'],
