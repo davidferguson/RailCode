@@ -1,5 +1,5 @@
 var currentActivityNum = 0;
-var indexToPick = 1;
+var indexToPick = 0;
 var arrivedAtStationCallback = false;
 
 var trainStations = [];
@@ -29,6 +29,7 @@ function compileAndRun()
 	trainLines = [];
 	backupTrainStations = false;
 	errorToReturn = "";
+	indexToPick = 0;
 	var codeToCompile = document.getElementById("railcodeCode").value;
 	if( codeToCompile == "" )
 	{
@@ -37,9 +38,13 @@ function compileAndRun()
 	else
 	{
 		http.open('get', '/compiler/compiler.php?script=' + encode64( codeToCompile ), false);
+		http.onload = function ()
+		{
+			var javascriptCode = replaceAll( http.responseText, "\\\"", "\"" );
+			console.log(javascriptCode);
+			eval(javascriptCode);
+		}
 		http.send( null );
-		var javascriptCode = replaceAll( http.responseText, "\\\"", "\"" );
-		eval(javascriptCode);
 	}
 }
 // END OF THE COMPILER FUNCTIONS
@@ -902,7 +907,7 @@ function executeTrain()
 		trainLines.splice(0,1);
 		if( trainStations[0] )
 		{
-			setTimeout(executeTrain, 1000);
+			setTimeout(executeTrain, 100);
 		}
 		else
 		{
