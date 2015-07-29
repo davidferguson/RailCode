@@ -902,7 +902,7 @@ function executeTrain()
 		trainLines.splice(0,1);
 		if( trainStations[0] )
 		{
-			setTimeout(executeTrain ,1000);
+			setTimeout(executeTrain, 1000);
 		}
 		else
 		{
