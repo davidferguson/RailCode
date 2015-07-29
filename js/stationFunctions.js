@@ -1,10 +1,13 @@
-var currentLessonNum = 0;
+var currentActivityNum = 0;
 var indexToPick = 1;
 var arrivedAtStationCallback = false;
 
 var trainStations = [];
 var trainLines = [];
 var closedStationList = [];
+
+var currentStationName;
+var currentLine;
 
 // THESE FUNCTIONS ARE FOR THE COMPILER
 function replaceAll(text, strA, strB)
@@ -38,7 +41,7 @@ function canmoveforwards()
 	var stationAndBranchNumber = getStationNumberAndBranchNumberFromStationName( currentStationName );
 	var stepNumber = stationAndBranchNumber.stationNumber;
 	var newStepNumber = stepNumber + 1;
-	var theStation = currentLesson.lines[currentLine].locations[newStepNumber];
+	var theStation = currentActivity.lines[currentLine].locations[newStepNumber];
 	if( theStation == undefined )
 	{
 		return false;
@@ -57,7 +60,7 @@ function canmoveforwards()
 		}
 		if( theStation == undefined )
 		{
-			var theStation = currentLesson.lines[currentLine].locations[newStepNumber];
+			var theStation = currentActivity.lines[currentLine].locations[newStepNumber];
 			for( var x = 0; x < stationAndBranchNumber.branchNumber.length-1; x++ )
 			{
 				theStation = theStation[stationAndBranchNumber.branchNumber[x]];
@@ -66,7 +69,7 @@ function canmoveforwards()
 		var stationName = theStation.name;
 		if( stationName == undefined )
 		{
-			theStation = currentLesson.lines[currentLine].locations[newStepNumber];
+			theStation = currentActivity.lines[currentLine].locations[newStepNumber];
 			for( var x = 0; x < stationAndBranchNumber.branchNumber.length-1; x++ )
 			{
 				theStation = theStation[stationAndBranchNumber.branchNumber[x]];
@@ -98,7 +101,7 @@ function canmovebackwards()
 	var stationAndBranchNumber = getStationNumberAndBranchNumberFromStationName( currentStationName );
 	var stepNumber = stationAndBranchNumber.stationNumber;
 	var newStepNumber = stepNumber - 1;
-	var theStation = currentLesson.lines[currentLine].locations[newStepNumber];
+	var theStation = currentActivity.lines[currentLine].locations[newStepNumber];
 	if( theStation == undefined )
 	{
 		return false;
@@ -117,7 +120,7 @@ function canmovebackwards()
 		}
 		if( theStation == undefined )
 		{
-			var theStation = currentLesson.lines[currentLine].locations[newStepNumber];
+			var theStation = currentActivity.lines[currentLine].locations[newStepNumber];
 			for( var x = 0; x < stationAndBranchNumber.branchNumber.length-1; x++ )
 			{
 				theStation = theStation[stationAndBranchNumber.branchNumber[x]];
@@ -126,7 +129,7 @@ function canmovebackwards()
 		var stationName = theStation.name;
 		if( stationName == undefined )
 		{
-			theStation = currentLesson.lines[currentLine].locations[newStepNumber];
+			theStation = currentActivity.lines[currentLine].locations[newStepNumber];
 			for( var x = 0; x < stationAndBranchNumber.branchNumber.length-1; x++ )
 			{
 				theStation = theStation[stationAndBranchNumber.branchNumber[x]];
@@ -157,13 +160,13 @@ function switchlines()
 {
 	var oldCurrentLine = currentLine;
 	var stationLineStradles = [];
-	for( var x = 0; x < currentLesson.lines.length; x++ )
+	for( var x = 0; x < currentActivity.lines.length; x++ )
 	{
 		currentLine = x;
 		var stationAndBranchNumber = getStationNumberAndBranchNumberFromStationName( currentStationName );
 		if( stationAndBranchNumber )
 		{
-			stationLineStradles.push(currentLesson.lines[x].name);
+			stationLineStradles.push(currentActivity.lines[x].name);
 		}
 	}
 	currentLine = oldCurrentLine;
@@ -173,16 +176,16 @@ function switchlines()
 function getStationNumberAndBranchNumberFromStationName( stationName )
 {
 	stationName = stationName.toLowerCase();
-	var stationOptions = currentLesson.lines[currentLine].locations.length;
+	var stationOptions = currentActivity.lines[currentLine].locations.length;
 	for( var x = 0; x < stationOptions; x++ )
 	{
 		var totalBranchOptions = [];
-		var branchOptions1 = currentLesson.lines[currentLine].locations[x].length;
+		var branchOptions1 = currentActivity.lines[currentLine].locations[x].length;
 		if( branchOptions1 == 1 )
 		{
 			for( var i = 0; i < branchOptions1; i++ )
 			{
-				if( currentLesson.lines[currentLine].locations[x][i].name == stationName )
+				if( currentActivity.lines[currentLine].locations[x][i].name == stationName )
 				{
 					return {stationNumber: x, branchNumber: [i]};
 				}
@@ -192,12 +195,12 @@ function getStationNumberAndBranchNumberFromStationName( stationName )
 		{
 			for( var y = 0; y < branchOptions1; y++ )
 			{
-				var branchOptions2 = currentLesson.lines[currentLine].locations[x][y].length;
+				var branchOptions2 = currentActivity.lines[currentLine].locations[x][y].length;
 				if( branchOptions2 == 1 )
 				{
 					for( var i = 0; i < branchOptions2; i++ )
 					{
-						if( currentLesson.lines[currentLine].locations[x][y][i].name == stationName )
+						if( currentActivity.lines[currentLine].locations[x][y][i].name == stationName )
 						{
 							return {stationNumber: x, branchNumber: [y,i]};
 						}
@@ -207,12 +210,12 @@ function getStationNumberAndBranchNumberFromStationName( stationName )
 				{
 					for( var z = 0; z < branchOptions2; z++ )
 					{
-						var branchOptions3 = currentLesson.lines[currentLine].locations[x][y][z].length;
+						var branchOptions3 = currentActivity.lines[currentLine].locations[x][y][z].length;
 						if( branchOptions3 == 1 )
 						{
 							for( var i = 0; i < branchOptions3; i++ )
 							{
-								if( currentLesson.lines[currentLine].locations[x][y][z][i].name == stationName )
+								if( currentActivity.lines[currentLine].locations[x][y][z][i].name == stationName )
 								{
 									return {stationNumber: x, branchNumber: [y,z,i]};
 								}
@@ -222,12 +225,12 @@ function getStationNumberAndBranchNumberFromStationName( stationName )
 						{
 							for( var a = 0; a < branchOptions3; a++ )
 							{
-								var branchOptions4 = currentLesson.lines[currentLine].locations[x][y][z][a].length;
+								var branchOptions4 = currentActivity.lines[currentLine].locations[x][y][z][a].length;
 								if( branchOptions4 == 1 )
 								{
 									for( var i = 0; i < branchOptions4; i++ )
 									{
-										if( currentLesson.lines[currentLine].locations[x][y][z][a][i].name == stationName )
+										if( currentActivity.lines[currentLine].locations[x][y][z][a][i].name == stationName )
 										{
 											return {stationNumber: x, branchNumber: [y,z,a,i]};
 										}
@@ -237,12 +240,12 @@ function getStationNumberAndBranchNumberFromStationName( stationName )
 								{
 									for( var b = 0; b < branchOptions4; b++ )
 									{
-										var branchOptions5 = currentLesson.lines[currentLine].locations[x][y][z][a][b].length;
+										var branchOptions5 = currentActivity.lines[currentLine].locations[x][y][z][a][b].length;
 										if( branchOptions5 == 1 )
 										{
 											for( var i = 0; i < branchOptions5; i++ )
 											{
-												if( currentLesson.lines[currentLine].locations[x][y][z][a][b][i].name == stationName )
+												if( currentActivity.lines[currentLine].locations[x][y][z][a][b][i].name == stationName )
 												{
 													return {stationNumber: x, branchNumber: [y,z,a,b,i]};
 												}
@@ -252,12 +255,12 @@ function getStationNumberAndBranchNumberFromStationName( stationName )
 										{
 											for( var c = 0; c < branchOptions5; c++ )
 											{
-												var branchOptions6 = currentLesson.lines[currentLine].locations[x][y][z][a][b][c].length;
+												var branchOptions6 = currentActivity.lines[currentLine].locations[x][y][z][a][b][c].length;
 												if( branchOptions6 == 1 )
 												{
 													for( var i = 0; i < branchOptions6; i++ )
 													{
-														if( currentLesson.lines[currentLine].locations[x][y][z][a][b][c][i].name == stationName )
+														if( currentActivity.lines[currentLine].locations[x][y][z][a][b][c][i].name == stationName )
 														{
 															return {stationNumber: x, branchNumber: [y,z,a,b,c,i]};
 														}
@@ -267,12 +270,12 @@ function getStationNumberAndBranchNumberFromStationName( stationName )
 												{
 													for( var d = 0; d < branchOptions6; d++ )
 													{
-														var branchOptions7 = currentLesson.lines[currentLine].locations[x][y][z][a][b][c][d].length;
+														var branchOptions7 = currentActivity.lines[currentLine].locations[x][y][z][a][b][c][d].length;
 														if( branchOptions7 == 1 )
 														{
 															for( var i = 0; i < branchOptions7; i++ )
 															{
-																if( currentLesson.lines[currentLine].locations[x][y][z][a][b][c][d][i].name == stationName )
+																if( currentActivity.lines[currentLine].locations[x][y][z][a][b][c][d][i].name == stationName )
 																{
 																	return {stationNumber: x, branchNumber: [y,z,a,b,c,d,i]};
 																}
@@ -282,12 +285,12 @@ function getStationNumberAndBranchNumberFromStationName( stationName )
 														{
 															for( var e = 0; e < branchOptions7; e++ )
 															{
-																var branchOptions8 = currentLesson.lines[currentLine].locations[x][y][z][a][b][c][d][e].length;
+																var branchOptions8 = currentActivity.lines[currentLine].locations[x][y][z][a][b][c][d][e].length;
 																if( branchOptions8 == 1 )
 																{
 																	for( var i = 0; i < branchOptions8; i++ )
 																	{
-																		if( currentLesson.lines[currentLine].locations[x][y][z][a][b][c][d][e][i].name == stationName )
+																		if( currentActivity.lines[currentLine].locations[x][y][z][a][b][c][d][e][i].name == stationName )
 																		{
 																			return {stationNumber: x, branchNumber: [y,z,a,b,c,d,e,i]};
 																		}
@@ -339,20 +342,20 @@ function getImageCoords(oldStationX, oldStationY)
 
 function oldsetup()
 {
-	currentLesson = lessons[currentLessonNum];
-	document.getElementById("mapImg").src = currentLesson.image;
+	currentActivity = lessons[currentActivityNum];
+	document.getElementById("mapImg").src = currentActivity.image;
 	document.getElementById("mapImg").onload = function()
 	{
-		currentLine = currentLesson.startLine;
-		currentStationName = currentLesson.startStation;
+		currentLine = currentActivity.startLine;
+		currentStationName = currentActivity.startStation;
 		moveTrainToStation( currentStationName );
 	}
 }
 
 function setup( activity, startLine, startStation )
 {
-	currentLesson = activity;
-	document.getElementById("mapImg").src = currentLesson.image;
+	currentActivity = activity;
+	document.getElementById("mapImg").src = currentActivity.image;
 	document.getElementById("mapImg").onload = function()
 	{
 		currentLine = startLine;
@@ -370,7 +373,7 @@ function moveTrainToStation( whatStation )
 	var stationAndBranchNumber = getStationNumberAndBranchNumberFromStationName( whatStation );
 	if( stationAndBranchNumber )
 	{
-		var theStation = currentLesson.lines[currentLine].locations[stationAndBranchNumber.stationNumber];
+		var theStation = currentActivity.lines[currentLine].locations[stationAndBranchNumber.stationNumber];
 		for( var x = 0; x < stationAndBranchNumber.branchNumber.length; x++ )
 		{
 			theStation = theStation[stationAndBranchNumber.branchNumber[x]];
@@ -406,7 +409,7 @@ function forward()
 	var stationAndBranchNumber = getStationNumberAndBranchNumberFromStationName( currentStationName );
 	var stepNumber = stationAndBranchNumber.stationNumber;
 	var newStepNumber = stepNumber + 1;
-	var theStation = currentLesson.lines[currentLine].locations[newStepNumber];
+	var theStation = currentActivity.lines[currentLine].locations[newStepNumber];
 	if( theStation == undefined )
 	{
 		trainStations.push("error");
@@ -427,7 +430,7 @@ function forward()
 		}
 		if( theStation == undefined )
 		{
-			var theStation = currentLesson.lines[currentLine].locations[newStepNumber];
+			var theStation = currentActivity.lines[currentLine].locations[newStepNumber];
 			for( var x = 0; x < stationAndBranchNumber.branchNumber.length-1; x++ )
 			{
 				theStation = theStation[stationAndBranchNumber.branchNumber[x]];
@@ -436,7 +439,7 @@ function forward()
 		var stationName = theStation.name;
 		if( stationName == undefined )
 		{
-			theStation = currentLesson.lines[currentLine].locations[newStepNumber];
+			theStation = currentActivity.lines[currentLine].locations[newStepNumber];
 			for( var x = 0; x < stationAndBranchNumber.branchNumber.length-1; x++ )
 			{
 				theStation = theStation[stationAndBranchNumber.branchNumber[x]];
@@ -474,7 +477,7 @@ function backward()
 	var stationAndBranchNumber = getStationNumberAndBranchNumberFromStationName( currentStationName );
 	var stepNumber = stationAndBranchNumber.stationNumber;
 	var newStepNumber = stepNumber - 1;
-	var theStation = currentLesson.lines[currentLine].locations[newStepNumber];
+	var theStation = currentActivity.lines[currentLine].locations[newStepNumber];
 	if( theStation == undefined )
 	{
 		trainStations.push("error");
@@ -495,7 +498,7 @@ function backward()
 		}
 		if( theStation == undefined )
 		{
-			var theStation = currentLesson.lines[currentLine].locations[newStepNumber];
+			var theStation = currentActivity.lines[currentLine].locations[newStepNumber];
 			for( var x = 0; x < stationAndBranchNumber.branchNumber.length-1; x++ )
 			{
 				theStation = theStation[stationAndBranchNumber.branchNumber[x]];
@@ -504,7 +507,7 @@ function backward()
 		var stationName = theStation.name;
 		if( stationName == undefined )
 		{
-			theStation = currentLesson.lines[currentLine].locations[newStepNumber];
+			theStation = currentActivity.lines[currentLine].locations[newStepNumber];
 			for( var x = 0; x < stationAndBranchNumber.branchNumber.length-1; x++ )
 			{
 				theStation = theStation[stationAndBranchNumber.branchNumber[x]];
@@ -541,7 +544,7 @@ function backward()
 function switchLine( toWhatLine )
 {
 	var oldCurrentLine = currentLine;
-	if( currentLesson.lines.length == 1 )
+	if( currentActivity.lines.length == 1 )
 	{
 		trainStations.push("error");
 		trainLines.push("error");
@@ -554,9 +557,9 @@ function switchLine( toWhatLine )
 			toWhatLine = toWhatLine.toLowerCase();
 			toWhatLine = toWhatLine.replace(" line", "");
 			var foundLine = false;
-			for( var x = 0; x < currentLesson.lines.length; x++ )
+			for( var x = 0; x < currentActivity.lines.length; x++ )
 			{
-				if( currentLesson.lines[x].name == toWhatLine )
+				if( currentActivity.lines[x].name == toWhatLine )
 				{
 					foundLine = true;
 					currentLine = x;
@@ -575,7 +578,7 @@ function switchLine( toWhatLine )
 						currentLine = oldCurrentLine;
 					}
 				}
-				else if( x == (currentLesson.lines.length-1) && foundLine == false )
+				else if( x == (currentActivity.lines.length-1) && foundLine == false )
 				{
 					trainStations.push("error");
 					trainLines.push("error");
@@ -586,7 +589,7 @@ function switchLine( toWhatLine )
 		else
 		{
 			var stationLineStradles = 0;
-			for( var x = 0; x < currentLesson.lines.length; x++ )
+			for( var x = 0; x < currentActivity.lines.length; x++ )
 			{
 				currentLine = x;
 				var stationAndBranchNumber = getStationNumberAndBranchNumberFromStationName( currentStationName );
@@ -599,7 +602,7 @@ function switchLine( toWhatLine )
 			if( stationLineStradles == 2 )
 			{
 				var foundLine = false;
-				for( var x = 0; x < currentLesson.lines.length; x++ )
+				for( var x = 0; x < currentActivity.lines.length; x++ )
 				{
 					if( x != currentLine )
 					{
@@ -639,7 +642,7 @@ function getNextStation()
 	var stationAndBranchNumber = getStationNumberAndBranchNumberFromStationName( currentStationName );
 	var stepNumber = stationAndBranchNumber.stationNumber;
 	var newStepNumber = stepNumber + 1;
-	var theStation = currentLesson.lines[currentLine].locations[newStepNumber];
+	var theStation = currentActivity.lines[currentLine].locations[newStepNumber];
 	if( theStation == undefined )
 	{
 		return "N/A";
@@ -658,7 +661,7 @@ function getNextStation()
 		}
 		if( theStation == undefined )
 		{
-			var theStation = currentLesson.lines[currentLine].locations[newStepNumber];
+			var theStation = currentActivity.lines[currentLine].locations[newStepNumber];
 			for( var x = 0; x < stationAndBranchNumber.branchNumber.length-1; x++ )
 			{
 				theStation = theStation[stationAndBranchNumber.branchNumber[x]];
@@ -667,7 +670,7 @@ function getNextStation()
 		var stationName = theStation.name;
 		if( stationName == undefined )
 		{
-			theStation = currentLesson.lines[currentLine].locations[newStepNumber];
+			theStation = currentActivity.lines[currentLine].locations[newStepNumber];
 			for( var x = 0; x < stationAndBranchNumber.branchNumber.length-1; x++ )
 			{
 				theStation = theStation[stationAndBranchNumber.branchNumber[x]];
@@ -699,7 +702,7 @@ function getPrevStation()
 	var stationAndBranchNumber = getStationNumberAndBranchNumberFromStationName( currentStationName );
 	var stepNumber = stationAndBranchNumber.stationNumber;
 	var newStepNumber = stepNumber - 1;
-	var theStation = currentLesson.lines[currentLine].locations[newStepNumber];
+	var theStation = currentActivity.lines[currentLine].locations[newStepNumber];
 	if( theStation == undefined )
 	{
 		return "N/A";
@@ -718,7 +721,7 @@ function getPrevStation()
 		}
 		if( theStation == undefined )
 		{
-			var theStation = currentLesson.lines[currentLine].locations[newStepNumber];
+			var theStation = currentActivity.lines[currentLine].locations[newStepNumber];
 			for( var x = 0; x < stationAndBranchNumber.branchNumber.length-1; x++ )
 			{
 				theStation = theStation[stationAndBranchNumber.branchNumber[x]];
@@ -727,7 +730,7 @@ function getPrevStation()
 		var stationName = theStation.name;
 		if( stationName == undefined )
 		{
-			theStation = currentLesson.lines[currentLine].locations[newStepNumber];
+			theStation = currentActivity.lines[currentLine].locations[newStepNumber];
 			for( var x = 0; x < stationAndBranchNumber.branchNumber.length-1; x++ )
 			{
 				theStation = theStation[stationAndBranchNumber.branchNumber[x]];
@@ -759,7 +762,7 @@ function hasForwardBranch()
 	var stationAndBranchNumber = getStationNumberAndBranchNumberFromStationName( currentStationName );
 	var stepNumber = stationAndBranchNumber.stationNumber;
 	var newStepNumber = stepNumber + 1;
-	var theStation = currentLesson.lines[currentLine].locations[newStepNumber];
+	var theStation = currentActivity.lines[currentLine].locations[newStepNumber];
 	if( theStation == undefined )
 	{
 		return false;
@@ -778,7 +781,7 @@ function hasForwardBranch()
 		}
 		if( theStation == undefined )
 		{
-			var theStation = currentLesson.lines[currentLine].locations[newStepNumber];
+			var theStation = currentActivity.lines[currentLine].locations[newStepNumber];
 			for( var x = 0; x < stationAndBranchNumber.branchNumber.length-1; x++ )
 			{
 				theStation = theStation[stationAndBranchNumber.branchNumber[x]];
@@ -787,7 +790,7 @@ function hasForwardBranch()
 		var stationName = theStation.name;
 		if( stationName == undefined )
 		{
-			theStation = currentLesson.lines[currentLine].locations[newStepNumber];
+			theStation = currentActivity.lines[currentLine].locations[newStepNumber];
 			for( var x = 0; x < stationAndBranchNumber.branchNumber.length-1; x++ )
 			{
 				theStation = theStation[stationAndBranchNumber.branchNumber[x]];
@@ -814,7 +817,7 @@ function hasBackwardBranch()
 	var stationAndBranchNumber = getStationNumberAndBranchNumberFromStationName( currentStationName );
 	var stepNumber = stationAndBranchNumber.stationNumber;
 	var newStepNumber = stepNumber - 1;
-	var theStation = currentLesson.lines[currentLine].locations[newStepNumber];
+	var theStation = currentActivity.lines[currentLine].locations[newStepNumber];
 	if( theStation == undefined )
 	{
 		return false;
@@ -833,7 +836,7 @@ function hasBackwardBranch()
 		}
 		if( theStation == undefined )
 		{
-			var theStation = currentLesson.lines[currentLine].locations[newStepNumber];
+			var theStation = currentActivity.lines[currentLine].locations[newStepNumber];
 			for( var x = 0; x < stationAndBranchNumber.branchNumber.length-1; x++ )
 			{
 				theStation = theStation[stationAndBranchNumber.branchNumber[x]];
@@ -842,7 +845,7 @@ function hasBackwardBranch()
 		var stationName = theStation.name;
 		if( stationName == undefined )
 		{
-			theStation = currentLesson.lines[currentLine].locations[newStepNumber];
+			theStation = currentActivity.lines[currentLine].locations[newStepNumber];
 			for( var x = 0; x < stationAndBranchNumber.branchNumber.length-1; x++ )
 			{
 				theStation = theStation[stationAndBranchNumber.branchNumber[x]];
@@ -882,7 +885,7 @@ function executeTrain()
 
 function updateStationInfo()
 {
-	var currentLineName = currentLesson.lines[currentLine].name;
+	var currentLineName = currentActivity.lines[currentLine].name;
 	var backgroundColour = "";
 	var textColour = "black";
 	switch( currentLineName )
@@ -961,9 +964,9 @@ function getClosedStations( callback )
 					var currentStationTo = closedStations.to[x].toLowerCase();
 					var currentStationLine = closedStations.lines[x].toLowerCase();
 					
-					for( var y = 0; y < currentLesson.lines.length; y++ )
+					for( var y = 0; y < currentActivity.lines.length; y++ )
 					{
-						if( currentLesson.lines[y].name == currentStationLine )
+						if( currentActivity.lines[y].name == currentStationLine )
 						{
 							currentLine = y;
 							// We are using that line!
@@ -1026,7 +1029,7 @@ function closeStation( whatStation, stationLine )
 	var stationAndBranchNumber = getStationNumberAndBranchNumberFromStationName( whatStation );
 	if( stationAndBranchNumber )
 	{
-		var theStation = currentLesson.lines[stationLine].locations[stationAndBranchNumber.stationNumber];
+		var theStation = currentActivity.lines[stationLine].locations[stationAndBranchNumber.stationNumber];
 		for( var x = 0; x < stationAndBranchNumber.branchNumber.length; x++ )
 		{
 			theStation = theStation[stationAndBranchNumber.branchNumber[x]];
@@ -1037,7 +1040,7 @@ function closeStation( whatStation, stationLine )
 		var newCoords = getImageCoords(stationX, stationY);
 		
 		var backgroundColour = "";
-		switch( currentLesson.lines[stationLine].name )
+		switch( currentActivity.lines[stationLine].name )
 		{
 			case "bakerloo":
 				backgroundColour = "#956438";
@@ -1254,26 +1257,29 @@ function formatListWhenFound( listToFormat )
 function generateStartStation()
 {
 	var startStation = "";
+	var theLine = "";
 	while( startStation == "" && closedStationList.indexOf(startStation) == -1 )
 	{
-		var theIndex = currentLesson.lines[Math.floor((Math.random() * currentLesson.lines.length))].locations;
+		theLine = Math.floor((Math.random() * currentActivity.lines.length));
+		var theIndex = currentActivity.lines[theLine].locations;
 		while( theIndex.length != 1 )
 		{
 			theIndex = theIndex[Math.floor((Math.random() * theIndex.length))];
 		}
 		if( theIndex == 0 || theIndex == [0] || theIndex[0] == 0 )
 		{
-			theIndex = currentLesson.lines[Math.floor((Math.random() * theIndex.length))];
+			theLine = Math.floor((Math.random() * currentActivity.lines.length));
+			theIndex = currentActivity.lines[theLine];
 		}
 		else
 		{
 			startStation = theIndex[0].name;
 		}
 	}
-	return startStation;
+	return [startStation, theLine];
 }
 
-function generateEndStation( startStation, endStation, lineNumber )
+function generateEndStation( startStation, lineNumber )
 {
 	var prevCurrentStationName = currentStationName;
 	var prevCurrentLine = currentLine;
@@ -1308,7 +1314,7 @@ function generateEndStation( startStation, endStation, lineNumber )
 					var possibleLines = [];
 					for( x = 0; x < switchlines().length; x++ )
 					{
-						if( ! switchlines()[x] == currentLesson.lines[currentLine].name )
+						if( ! switchlines()[x] == currentActivity.lines[currentLine].name )
 						{
 							possibleLines.push( switchlines()[x] );
 						}
@@ -1316,6 +1322,7 @@ function generateEndStation( startStation, endStation, lineNumber )
 					var lineToSwitchTo = possibleLines[Math.floor((Math.random()*possibleLines.length))];
 					if( ( lineToSwitchTo != undefined ) || ( lineToSwitchTo == undefined && switchlines().length == 2 ) )
 					{
+						currentLine = lineToSwitchTo;
 						switchLine(lineToSwitchTo);
 						currentDirection = Math.floor((Math.random()*2));
 						if( ( currentDirection == 0 && ! canmoveforwards() ) || ( currentDirection == 1 && ! canmovebackwards() ) )
@@ -1327,9 +1334,10 @@ function generateEndStation( startStation, endStation, lineNumber )
 				else
 				{
 					var newCurrentStationName = currentStationName;
+					var newCurrentLine = currentLine;
 					currentStationName = prevCurrentStationName;
 					currentLine = prevCurrentLine;
-					return newCurrentStationName;
+					return [newCurrentStationName, newCurrentLine];
 				}
 			}
 		}
@@ -1351,7 +1359,7 @@ function generateEndStation( startStation, endStation, lineNumber )
 					var possibleLines = [];
 					for( x = 0; x < switchlines().length; x++ )
 					{
-						if( ! switchlines()[x] == currentLesson.lines[currentLine].name )
+						if( ! switchlines()[x] == currentActivity.lines[currentLine].name )
 						{
 							possibleLines.push( switchlines()[x] );
 						}
@@ -1359,6 +1367,7 @@ function generateEndStation( startStation, endStation, lineNumber )
 					var lineToSwitchTo = possibleLines[Math.floor((Math.random()*possibleLines.length))];
 					if( ( lineToSwitchTo != undefined ) || ( lineToSwitchTo == undefined && switchlines().length == 2 ) )
 					{
+						currentLine = lineToSwitchTo;
 						switchLine(lineToSwitchTo);
 						currentDirection = Math.floor((Math.random()*2));
 						if( ( currentDirection == 0 && ! canmoveforwards() ) || ( currentDirection == 1 && ! canmovebackwards() ) )
@@ -1370,9 +1379,10 @@ function generateEndStation( startStation, endStation, lineNumber )
 				else
 				{
 					var newCurrentStationName = currentStationName;
+					var newCurrentLine = currentLine;
 					currentStationName = prevCurrentStationName;
 					currentLine = prevCurrentLine;
-					return newCurrentStationName;
+					return [newCurrentStationName, newCurrentLine];
 				}
 			}
 		}
@@ -1398,7 +1408,7 @@ function generateEndStation( startStation, endStation, lineNumber )
 				var possibleLines = [];
 				for( x = 0; x < switchlines().length; x++ )
 				{
-					if( switchlines()[x] != currentLesson.lines[currentLine].name )
+					if( switchlines()[x] != currentActivity.lines[currentLine].name )
 					{
 						possibleLines.push( switchlines()[x] );
 					}
@@ -1406,6 +1416,7 @@ function generateEndStation( startStation, endStation, lineNumber )
 				var lineToSwitchTo = possibleLines[Math.floor((Math.random()*possibleLines.length))];
 				if( ( lineToSwitchTo != undefined ) || ( lineToSwitchTo == undefined && switchlines().length == 2 ) )
 				{
+					currentLine = lineToSwitchTo;
 					switchLine(lineToSwitchTo);
 					currentDirection = Math.floor((Math.random()*2));
 					if( ( currentDirection == 0 && ! canmoveforwards() ) || ( currentDirection == 1 && ! canmovebackwards() ) )
@@ -1417,9 +1428,10 @@ function generateEndStation( startStation, endStation, lineNumber )
 			else
 			{
 				var newCurrentStationName = currentStationName;
+				var newCurrentLine = currentLine;
 				currentStationName = prevCurrentStationName;
 				currentLine = prevCurrentLine;
-				return newCurrentStationName;
+				return [newCurrentStationName, newCurrentLine];
 			}
 		}
 		if( Math.floor((Math.random()*6)) == 2 && currentStationName != startStation )
@@ -1429,7 +1441,7 @@ function generateEndStation( startStation, endStation, lineNumber )
 				var possibleLines = [];
 				for( x = 0; x < switchlines().length; x++ )
 				{
-					if( ! switchlines()[x] == currentLesson.lines[currentLine].name )
+					if( ! switchlines()[x] == currentActivity.lines[currentLine].name )
 					{
 						possibleLines.push( switchlines()[x] );
 					}
@@ -1446,14 +1458,59 @@ function generateEndStation( startStation, endStation, lineNumber )
 				}
 			}
 		}
-		if( Math.floor((Math.random()*6)) == 4 && currentStationName != startStation )
+		if( Math.floor((Math.random()*20)) == 4 && currentStationName != startStation )
 		{
+			if( currentLine == lineNumber && switchlines.length != 1 )
+			{
+				possibleLines = [];
+				for( x = 0; x < switchlines().length; x++ )
+				{
+					if( ! switchlines()[x] == currentActivity.lines[currentLine].name )
+				{
+						possibleLines.push( switchlines()[x] );
+					}
+				}
+				var lineToSwitchTo = possibleLines[Math.floor((Math.random()*possibleLines.length))];
+				if( ( lineToSwitchTo != undefined ) || ( lineToSwitchTo == undefined && switchlines().length == 2 ) )
+				{
+					currentLine = lineToSwitchTo;
+					switchLine(lineToSwitchTo);
+					currentDirection = Math.floor((Math.random()*2));
+				}
+			}
 			var newCurrentStationName = currentStationName;
+			var newCurrentLine = currentLine;
 			currentStationName = prevCurrentStationName;
 			currentLine = prevCurrentLine;
-			return newCurrentStationName;
+			return [newCurrentStationName, newCurrentLine];
 		}
 	}
 	currentStationName = prevCurrentStationName;
 	currentLine = prevCurrentLine;
+}
+
+function playSetup()
+{
+	var mapsToChoose = [bakerloo, hammersmith, district, districtPiccadilly, districtPiccadillyCircle, multiple, multiple2];
+	currentActivity = mapsToChoose[Math.floor((Math.random()*mapsToChoose.length))];
+	
+	document.getElementById("mapImg").src = currentActivity.image;
+	document.getElementById("mapImg").style.display = "none";
+	document.getElementById("mapImg").onload = function()
+	{
+		currentLine = Math.floor((Math.random()*currentActivity.lines.length));
+		getClosedStations( function() {
+			var startStation = generateStartStation();
+			currentLine = startStation[1];
+			startStation = startStation[0];
+			var endStation = generateEndStation( startStation, currentLine );
+			endLine = endStation[1];
+			endStation = endStation[0];
+			console.log("GET TO " + endStation + " ON LINE " + currentActivity.lines[endLine].name);
+			document.getElementById("mapImg").style.display = "block";
+			currentStationName = startStation;
+			moveTrainToStation( currentStationName );
+		});
+	}
+	
 }
