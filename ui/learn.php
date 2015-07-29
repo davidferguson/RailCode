@@ -78,6 +78,13 @@
 				outline:0px !important;
 				-webkit-appearance:none;
 			}
+			.instructionNameText {
+				font-style: italic;
+			}
+			.instructionCodeText {
+				font-weight: bold;
+				font-family: monospace;
+			}
 		</style>
 	</head>
 	<body>
