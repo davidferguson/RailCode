@@ -109,7 +109,7 @@ var stages = [
 			mustInclude: ['repeat 8 times\nforwards\nend repeat'],
 			stepSuccess: true,
 			startStation: 'hammersmith',
-			stations: ["goldhawk road","sheperd's bush market","wood lane","latimer road","ladbroke grove","westbourne park","royal oak","paddington"],
+			stations: ["goldhawk road","shepherd's bush market","wood lane","latimer road","ladbroke grove","westbourne park","royal oak","paddington"],
 			startLine: '0',
 			endLine: '0',
 			objectToUse: hammersmith
@@ -119,7 +119,7 @@ var stages = [
 			mustInclude: ['backwards'],
 			stepSuccess: true,
 			startStation: 'paddington',
-			stations: ["royal oak","westbourne park","ladbroke grove","latimer road","wood lane","sheperd's bush market"],
+			stations: ["royal oak","westbourne park","ladbroke grove","latimer road","wood lane","shepherd's bush market", "goldhawk road"],
 			startLine: '0',
 			endLine: '0',
 			objectToUse: hammersmith
@@ -135,7 +135,7 @@ var stages = [
 			startStation: 'harrow & wealdstone',
 			stations: ["error"],
 			startLine: '0',
-			endLine: '0',
+			endLine: 'error',
 			objectToUse: bakerloo
 		},
 		{
@@ -145,7 +145,7 @@ var stages = [
 			startStation: 'harrow & wealdstone',
 			stations: ["kenton","south kenton","north wembley","wembley central","stonebridge park","harlesden","willesden junction","kensal green","queen's park","kilburn park","maida vale","warwick avenue","paddington","edgware road","marylebone","baker street",'regent\'s park',"oxford circus","piccadilly circus","charing cross","embankment","waterloo","lambeth north","elephant & castle","error","error","error","error","error","error","error","error","error","error","error","error","error","error","error","error","error","error","error","error","error","error","error","error","error","error"],
 			startLine: '0',
-			endLine: '0',
+			endLine: 'error',
 			objectToUse: bakerloo
 		},
 		{
@@ -191,17 +191,17 @@ var stages = [
 			mustInclude: ['while canMoveForwards do\nforwards\nend while'],
 			stepSuccess: true,
 			startStation: 'westminster',
-			stations: ["waterloo","southwark","london bridge","bermondsey","canada water","canary warf","north greenwich","canning town","west ham","stratford"],
+			stations: ["waterloo","southwark","london bridge","bermondsey","canada water","canary wharf","north greenwich","canning town","west ham","stratford"],
 			startLine: '0',
 			endLine: '0',
 			objectToUse: jubilee
 		},
 		{
-			instruction: "Super work! Now to round of this section, bring your tube back to the start of this section of the line.",
-			mustInclude: ['while canMoveForwards do\nforwards\nend while'],
+			instruction: "Super work! Now to round off this section, bring your tube back to the start of this section of the line.",
+			mustInclude: ['while canMoveBackwards do\nbackwards\nend while'],
 			stepSuccess: true,
 			startStation: 'stratford',
-			stations: ["west ham","canning town","north greenwich","canary warf","canada water","bermondsey","london bridge","southwark","waterloo","westminster"],
+			stations: ["west ham","canning town","north greenwich","canary wharf","canada water","bermondsey","london bridge","southwark","waterloo","westminster"],
 			startLine: '0',
 			endLine: '0',
 			objectToUse: jubilee
@@ -225,7 +225,7 @@ var stages = [
 			mustInclude: ['forwards'],
 			stepSuccess: true,
 			startStation: 'canada water',
-			stations: ["canary warf","north greenwich","canning town","west ham"],
+			stations: ["canary wharf","north greenwich","canning town","west ham"],
 			startLine: '0',
 			endLine: '0',
 			objectToUse: jubilee
@@ -235,7 +235,7 @@ var stages = [
 			mustInclude: ['while the currentStation is not "Canada Water" do\nbackwards\nend while'],
 			stepSuccess: true,
 			startStation: 'west ham',
-			stations: ["canning town","north greenwich","canary warf","canada water"],
+			stations: ["canning town","north greenwich","canary wharf","canada water"],
 			startLine: '0',
 			endLine: '0',
 			objectToUse: jubilee
@@ -250,18 +250,18 @@ var stages = [
 			objectToUse: jubilee
 		},
 		{
-			instruction: "Can you now guess how to go <span class='instructionCodeText'>forwards</span> from <span class='instructionNameText'>Canada Water</span>to <span class='instructionNameText'>Stratford</span>? All you need to do is replace <span class='instructionCodeText'>backwards</span> with <span class='instructionCodeText'>forwards</span> and <span class='instructionNameText'>Canada Water</span> with <span class='instructionNameText'>Stratford</span>in the code you just used. It's easy! Try that now.",
+			instruction: "Can you now guess how to go <span class='instructionCodeText'>forwards</span> from <span class='instructionNameText'> Canada Water</span>to <span class='instructionNameText'>Stratford</span>? All you need to do is replace <span class='instructionCodeText'>backwards</span> with <span class='instructionCodeText'>forwards</span> and <span class='instructionNameText'>Canada Water</span> with <span class='instructionNameText'>Stratford</span> in the code you just used. It's easy! Try that now.",
 			mustInclude: ['while the currentStation is not "Stratford" do\nforwards\nend while'],
 			stepSuccess: true,
 			startStation: 'canada water',
-			stations: ["canary warf","north greenwich","canning town","west ham","stratford"],
+			stations: ["canary wharf","north greenwich","canning town","west ham","stratford"],
 			startLine: '0',
 			endLine: '0',
 			objectToUse: jubilee
 		},
 		{
 			instruction: "Bravo! Let's try this on a different line. This is a section of the <span class='instructionNameText'>District</span> line. Your tube is at <span class='instructionNameText'>West Kensington</span> station. Move it to <span class='instructionNameText'>Ravenscourt Park</span> using <span class='instructionCodeText'>while</span>.",
-			mustInclude: ['while the currentStation is not "Stratford" do\nbackwards\nend while'],
+			mustInclude: ['while the currentStation is not "Ravenscourt Park" do\nbackwards\nend while'],
 			stepSuccess: true,
 			startStation: 'west kensington',
 			stations: ["barons court","hammersmith","ravenscourt park"],
@@ -314,8 +314,8 @@ var stages = [
 			objectToUse: district
 		},
 		{
-			instruction: "What we need to do is change the default setting of our tube so that it goes right when it meets a split, rather than left. Thankfully this is possible by typing <span class='instructionCodeText'>head right</span> . This does not need to be just before the tube reaches a split, typing this at the start of your code will keep the setting whilst your code is running. Try this now by typing <span class='instructionCodeText'>head right</span> , newline, <span class='instructionCodeText'>forwards</span> .",
-			mustInclude: ['head right\nforwards'],
+			instruction: "What we need to do is change the default setting of our tube so that it goes right when it meets a split, rather than left. Thankfully this is possible by typing <span class='instructionCodeText'>head right</span> . This does not need to be just before the tube reaches a split, typing this at the start of your code will keep the setting whilst your code is running. Try this now by typing <span class='instructionCodeText'>head right</span> , newline, <span class='instructionCodeText'>backwards</span> .",
+			mustInclude: ['head right\nbackwards'],
 			stepSuccess: true,
 			startStation: 'turnham green',
 			stations: ["gunnersbury"],
@@ -377,7 +377,7 @@ var stages = [
 			instruction: "OK. To change lines all you need to do is position yourself on the station you plan to change at (we've already done this), and type the instruction <span class='instructionCodeText'>switch line</span> . That's it! Try that, and see how you can switch to the <span class='instructionNameText'>Piccadilly Line</span>. You can tell what line you are on by the colour of the 'Current / Next / Previous Station Information Panel.",
 			stepSuccess: true,
 			startStation: 'earl\'s court',
-			stations: ["earl\'s court","earl\'s court"],
+			stations: ["earl\'s court"],
 			startLine: '0',
 			endLine: '1',
 			objectToUse: districtPiccadilly
@@ -426,11 +426,11 @@ var stages = [
 			objectToUse: districtPiccadillyCircle
 		},
 		{
-			instruction: "Excellent. You're now all ready to switch to the <span class='instructionNameText'>Circle Line</span>. However, you cannot just use the <span class='instructionCodeText'>switch line</span> instruction, because the tube won't know which line to switch to. If there is more than three lines that the tube can switch between, you must specify the line to switch to. Type <span class='instructionCodeText'>switch line to &quot;Circle&quot;</span> , and click 'Run'.",
+			instruction: "Excellent. You're now all ready to switch to the <span class='instructionNameText'>Circle Line</span>. However, you cannot just use the <span class='instructionCodeText'>switch line</span> instruction, because the tube won't know which line to switch to. If there is more than two lines that the tube can switch between, you must specify the line to switch to. Type <span class='instructionCodeText'>switch line to &quot;Circle&quot;</span> , and click 'Run'.",
 			mustInclude: ['switch line to "Circle"'],
 			stepSuccess: true,
 			startStation: 'south kensington',
-			stations: ["south kensington","south kensington"],
+			stations: ["south kensington"],
 			startLine: '1',
 			endLine: '2',
 			objectToUse: districtPiccadillyCircle
@@ -450,7 +450,7 @@ var stages = [
 			mustInclude: ['switch line to "Piccadilly"'],
 			stepSuccess: true,
 			startStation: 'notting hill gate',
-			stations: ["high street kensington","gloucester","south kensington","south kensington","knightsbridge"],
+			stations: ["high street kensington","gloucester road","south kensington","south kensington","knightsbridge"],
 			startLine: '2',
 			endLine: '1',
 			objectToUse: districtPiccadillyCircle
