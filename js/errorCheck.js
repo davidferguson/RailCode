@@ -9,6 +9,7 @@ function pageLoad(gameMode, stage)
 		mode = 'learn';
 		currentStage = stage;
 		setup(stages[currentStage].step[currentStep].objectToUse, stages[currentStage].step[currentStep].startLine, stages[currentStage].step[currentStep].startStation);
+		document.getElementById('trainInfoPanel').firstChild.innerHTML = '<h4>' + stages[currentStage].step[currentStep].instruction + '</h4>';
 	}
 	else
 	{
