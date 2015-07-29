@@ -2,12 +2,12 @@
 	switch( $_GET["action"] )
 	{
 		case "login":
-			$dbConn = mysql_connect('mysql2.000webhost.com', 'a2095108_rail', 'imacg3');
+			$dbConn = mysql_connect('localhost', 'balgreen_railcod', '***');
 			if ( ! $dbConn )
 			{
 				die("Unable to connect to database: " . mysql_error());
 			}
-			$db_selected = mysql_select_db('a2095108_rail', $dbConn);
+			$db_selected = mysql_select_db('balgreen_railcode', $dbConn);
 			if ( ! $db_selected )
 			{
 				die ("Unable to select database: " . mysql_error());
