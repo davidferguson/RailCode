@@ -281,7 +281,7 @@ var multiple = {
 		{
 			name: "bakerloo",
 			locations: [
-				[{name:"queeen's park", x:240, y:29}],
+				[{name:"queen's park", x:240, y:29}],
 				[{name:"kilburn park", x:277, y:56}],
 				[{name:"maida vale", x:318, y:88}],
 				[{name:"warwick avenue", x:358, y:116}],
