@@ -2,7 +2,7 @@
 	switch( $_GET["action"] )
 	{
 		case "login":
-			$dbConn = mysql_connect('localhost', 'balgreen_railcod', '***');
+			$dbConn = mysql_connect('localhost', 'balgreen_railcod', 'passwordhere');
 			if ( ! $dbConn )
 			{
 				die("Unable to connect to database: " . mysql_error());
@@ -18,9 +18,13 @@
 				if( mysql_num_rows($loginQuery) == 1 )
 				{
 					session_start();
+					$username = mysql_query("SELECT `username` FROM `users` WHERE id='" . $loginQuery . "'");
+					$learnStage = mysql_query("SELECT `learnStage` FROM `users` WHERE id='" . $loginQuery . "'");
 					$_SESSION["id"] = $loginQuery;
 					$_SESSION["email"] = $_POST["inputEmail"];
-					header("Location: learn.php");
+					$_SESSION["username"] = $username;
+					$_SESSION["learnStage"] = $learnStage;
+					header("Location: home.php");
 				}
 				else
 				{
@@ -32,5 +36,12 @@
 				echo "Unable to select info from database: " . mysql_error();
 			}
 			break;
+		case "logout":
+			session_start();
+			if( isset( $_SESSION["id"] ) )
+			{
+				session_destroy();
+				header("Location: login.php");
+			}
 	}
 ?>
