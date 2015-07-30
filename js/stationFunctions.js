@@ -41,7 +41,6 @@ function compileAndRun()
 		http.onload = function ()
 		{
 			var javascriptCode = replaceAll( http.responseText, "\\\"", "\"" );
-			console.log(javascriptCode);
 			eval(javascriptCode);
 		}
 		http.send( null );
@@ -374,10 +373,6 @@ function oldsetup()
 
 function setup( activity, startLine, startStation )
 {
-	console.log("SETTING UP");
-	console.log(activity);
-	console.log(startLine);
-	console.log(startStation);
 	currentActivity = activity;
 	document.getElementById("mapImg").src = currentActivity.image;
 	document.getElementById("mapImg").onload = function()
@@ -898,25 +893,32 @@ function executeTrain()
 		backupTrainStations = "";
 		backupTrainStations = trainStations.slice();
 	}
-	currentLine = trainLines[0];
-	currentStationName = trainStations[0];
-	if( currentStationName != "error" )
+	if( trainStations.length != 0 )
 	{
-		moveTrainToStation( currentStationName );
-		trainStations.splice(0,1);
-		trainLines.splice(0,1);
-		if( trainStations[0] )
+		currentLine = trainLines[0];
+		currentStationName = trainStations[0];
+		if( currentStationName != "error" )
 		{
-			setTimeout(executeTrain, 100);
+			moveTrainToStation( currentStationName );
+			trainStations.splice(0,1);
+			trainLines.splice(0,1);
+			if( trainStations[0] )
+			{
+				setTimeout(executeTrain, 100);
+			}
+			else
+			{
+				checkResult( 1, backupTrainStations, currentLine, document.getElementById("railcodeCode").value, errorToReturn, playFinishedStation );
+			}
 		}
 		else
 		{
-			checkResult( 1, backupTrainStations, currentLine, document.getElementById("railcodeCode").value, errorToReturn, playFinishedStation );
+			checkResult( 0, backupTrainStations, currentLine, document.getElementById("railcodeCode").value, errorToReturn, playFinishedStation );
 		}
 	}
 	else
 	{
-		checkResult( 0, backupTrainStations, currentLine, document.getElementById("railcodeCode").value, errorToReturn, playFinishedStation );
+		checkResult( 1, [], currentLine, document.getElementById("railcodeCode").value, errorToReturn, playFinishedStation );
 	}
 }
 
