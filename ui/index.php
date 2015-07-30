@@ -6,6 +6,6 @@
 	}
 	else
 	{
-		header("Location: learn.php");
+		header("Location: home.php");
 	}
 ?>
