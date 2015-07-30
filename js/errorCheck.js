@@ -139,10 +139,12 @@ function nextStep()
 		if (stages[currentStage].step.length - 1 == currentStep)
 		{
 			//we are at the end of a stage
-			if (stages.length == currentStage)
+			if (stages.length-1 == currentStage)
 			{
 				//the user has completed all the levels
+				//Don't forget to update the user's progress in the DB
 				//WE ARE HERE
+				// The user has now finished the learn mode.
 			}
 			else
 			{
