@@ -8,7 +8,9 @@ var closedStationList = [];
 var backupTrainStations = false;
 var errorToReturn = "";
 
+var playStartStation;
 var playFinishedStation;
+var playStartLine;
 
 var currentStationName;
 var currentLine;
@@ -25,6 +27,7 @@ function replaceAll(text, strA, strB)
 var http = new XMLHttpRequest();
 function compileAndRun()
 {
+	//document.getElementById("railcodeCode").disabled = true;
 	trainStations = [];
 	trainLines = [];
 	backupTrainStations = false;
@@ -362,29 +365,33 @@ function getImageCoords(oldStationX, oldStationY)
 function oldsetup()
 {
 	currentActivity = lessons[currentActivityNum];
-	document.getElementById("mapImg").src = currentActivity.image;
 	document.getElementById("mapImg").onload = function()
 	{
 		currentLine = currentActivity.startLine;
 		currentStationName = currentActivity.startStation;
 		moveTrainToStation( currentStationName );
 	}
+	document.getElementById("mapImg").src = currentActivity.image;
 }
 
 function setup( activity, startLine, startStation )
 {
+	console.log(startStation);
+	console.log(startLine);
 	currentActivity = activity;
 	document.getElementById("mapImg").src = currentActivity.image;
 	document.getElementById("mapImg").onload = function()
 	{
 		currentLine = startLine;
 		currentStationName = startStation;
-		moveTrainToStation( currentStationName );
+		moveTrainToStation( startStation );
 	}
 }
 
 function moveTrainToStation( whatStation )
 {
+	console.log("MOVE TRAIN TO STATION");
+	console.log(whatStation);
 	whatStation = whatStation.toLowerCase();
 	var trainImg = document.getElementById("trainImg");
 	trainImg.style.display = "none";
@@ -908,16 +915,19 @@ function executeTrain()
 			}
 			else
 			{
+				//document.getElementById("railcodeCode").disabled = false;
 				checkResult( 1, backupTrainStations, currentLine, document.getElementById("railcodeCode").value, errorToReturn, playFinishedStation );
 			}
 		}
 		else
 		{
+			//document.getElementById("railcodeCode").disabled = false;
 			checkResult( 0, backupTrainStations, currentLine, document.getElementById("railcodeCode").value, errorToReturn, playFinishedStation );
 		}
 	}
 	else
 	{
+		//document.getElementById("railcodeCode").disabled = false;
 		checkResult( 1, [], currentLine, document.getElementById("railcodeCode").value, errorToReturn, playFinishedStation );
 	}
 }
@@ -995,6 +1005,7 @@ function getClosedStations( callback )
 		if (getRequest.status === 200)
 		{
 			var closedStations = JSON.parse(getRequest.responseText);
+			//var closedStations = {lines:["bakerloo"], from:["Paddington"], to:["Warwick Avenue"]}
 			if( closedStations.lines )
 			{
 				for( var x = 0; x < closedStations.lines.length; x++ )
@@ -1528,28 +1539,91 @@ function generateEndStation( startStation, lineNumber )
 	currentLine = prevCurrentLine;
 }
 
-function playSetup()
+function generatePlayValues( callback )
 {
 	var mapsToChoose = [bakerloo, hammersmith, district, districtPiccadilly, districtPiccadillyCircle, multiple, multiple2];
+	//mapsToChoose = [multiple]
 	currentActivity = mapsToChoose[Math.floor((Math.random()*mapsToChoose.length))];
 	
 	document.getElementById("mapImg").src = currentActivity.image;
-	document.getElementById("mapImg").style.display = "none";
 	document.getElementById("mapImg").onload = function()
 	{
 		currentLine = Math.floor((Math.random()*currentActivity.lines.length));
 		getClosedStations( function() {
 			var startStation = generateStartStation();
-			currentLine = startStation[1];
-			startStation = startStation[0];
-			var endStation = generateEndStation( startStation, currentLine );
-			endLine = endStation[1];
-			endStation = endStation[0];
-			playFinishedStation = endStation;
-			document.getElementById("mapImg").style.display = "block";
-			currentStationName = startStation;
-			moveTrainToStation( currentStationName );
+			playStartLine = startStation[1];
+			playStartStation = startStation[0];
+			endPlayStation = generateEndStation( playStartStation, playStartLine );
+			endLine = endPlayStation[1];
+			endPlayStation = endPlayStation[0];
+			playFinishedStation = endPlayStation;
+			document.getElementById("trainInfoPanel").innerHTML = "<h4>Try and get your tube from <b>" + toTitleCase(playStartStation) + "</b> to <b>" + toTitleCase(endPlayStation) + "</b></h4>";
+			callback();
 		});
 	}
-	
+}
+
+function playSetup()
+{
+	console.log(playStartStation);
+	currentLine = playStartLine;
+	currentStationName = playStartStation;
+	moveTrainToStation( currentStationName );
+}
+
+function saveSolution( usersPoints, callback )
+{
+	var challengeNameToSend = prompt("Please enter a descriptive name for your challenge");
+	if( ! challengeNameToSend )
+	{
+		alert("Woops!\nI didn't like the name you typed in.");
+		return false;
+	}
+	challengeNameToSend = encode64(challengeNameToSend);
+	// Challenge specific stuff
+	var openDataToSave = ( JSON.stringify(closedStationList).toString() );
+	var activityToSave = ( JSON.stringify(currentActivity).toString() );
+	var startLineToSave = encode64( playStartLine.toString() );
+	var startStationToSave = encode64( playStartStation );
+	var endStationToSave = encode64( playFinishedStation );
+	// Solution specific stuff
+	var codeToSave = encode64(document.getElementById("railcodeCode").value);
+	var pointsToSave = usersPoints;
+	// Send off the request
+	var getRequest = new XMLHttpRequest();
+	getRequest.open('POST', '/ui/process.php?action=addChallenge&openData=' + openDataToSave + '&activity=' + activityToSave + '&startLine=' + startLineToSave + '&startStation=' + startStationToSave + '&endStation=' + endStationToSave + "&challengeName=" + challengeNameToSend, true);
+	getRequest.onreadystatechange=function()
+	{
+		if (getRequest.readyState==4 && getRequest.status==200)
+		{
+			console.log(getRequest.responseText);
+			if( getRequest.responseText.indexOf("-1") == -1 )
+			{
+				var challengeIdToSend = getRequest.responseText;
+				var getRequest2 = new XMLHttpRequest();
+				getRequest2.open('POST', '/ui/process.php?action=addSolution&code=' + codeToSave + "&points=" + pointsToSave + "&challengeId=" + challengeIdToSend, true);
+				getRequest2.onreadystatechange=function()
+				{
+					if(getRequest2.readyState==4 && getRequest2.status==200)
+					{
+						console.log(getRequest2.responseText);
+						if( getRequest2.responseText == "1" )
+						{
+							alert("Yay!\nThe challenge and your code has been uploaded onto the challenges database.");
+						}
+						else
+						{
+							alert("Woops!\nThere was an error submitting your code to the server. The challenge should have been uploaded, but your submission didn't go through. Sorry.");
+						}
+					}
+				}
+				getRequest2.send();
+			}
+			else
+			{
+				alert("Woops!\nThere was an error submitting your challenge to the server.");
+			}
+		}
+	}
+	getRequest.send();
 }
