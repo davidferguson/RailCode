@@ -97,13 +97,13 @@
 						<span class="icon-bar"></span>
 						<span class="icon-bar"></span>
 					</button>
-					<a class="navbar-brand" href="#">RailCode</a>
+					<a class="navbar-brand" href="main.php">RailCode</a>
 				</div>
 				<div id="navbar" class="collapse navbar-collapse">
 					<ul class="nav navbar-nav">
-						<li><a href="#about">Learn</a></li>
-						<li><a href="#contact">Play</a></li>
-						<li><a href="#contact">Leaderborad</a></li>
+						<li><a href="learn.php">Learn</a></li>
+						<li><a href="play.php">Play</a></li>
+						<li><a href="challenge.php">Challenge</a></li>
 					</ul>
 				</div>
 			</div>
