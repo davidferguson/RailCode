@@ -12,6 +12,7 @@
 		<meta name="viewport" content="width=device-width, initial-scale=1">
 		<title>RailCode :: Learn</title>
 		<link href="bootstrap.css" rel="stylesheet">
+		<link href='http://fonts.googleapis.com/css?family=Quicksand:400,300,700' rel='stylesheet' type='text/css'>
 		<style>
 			body {
 				padding-top: 50px;
@@ -73,6 +74,7 @@
 						<li><a href="learn.php">Learn</a></li>
 						<li><a href="main.php">Play</a></li>
 						<li><a href="challenge.php">Challenge</a></li>
+						<li><a href="process.php?action=logout">Logout</a></li>
 					</ul>
 				</div>
 			</div>
@@ -120,7 +122,7 @@
 					 fit-margin-right="10"
 					 fit-margin-bottom="10" />
 				  <title
-					 id="title4">Route map of London Underground, London Overground, Docklands Light Railway and Crossrail licensed under Creative Commons Attribution-Share Alike 4.0 International by Wikimedians</title>
+					 id="title4"></title>
 				  <metadata
 					 id="license">
 					<rdf:RDF>
@@ -131,7 +133,7 @@
 						   rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
 						<cc:license
 						   rdf:resource="http://creativecommons.org/licenses/by-sa/3.0/" />
-						<dc:title>Route map of London Underground, London Overground, Docklands Light Railway and Crossrail licensed under Creative Commons Attribution-Share Alike 4.0 International by Wikimedians</dc:title>
+						<dc:title></dc:title>
 					  </cc:Work>
 					  <cc:License
 						 rdf:about="http://creativecommons.org/licenses/by-sa/3.0/">
@@ -967,24 +969,31 @@
 			</div>
 			<table style="width:70%; display:block; margin-left:auto; margin-right:auto; text-align:center;">
 				<tr>
-					<td><div class="stageBox"><img class="stageBoxImg" src="/img/learnIcons/1.svg" onclick="loadStage(1);" />Movement</div></td>
-					<td><div class="stageBox"><img class="stageBoxImg" src="/img/learnIcons/2.svg" onclick="loadStage(2);" />Repeats</div></td>
-					<td><div class="stageBox"><img class="stageBoxImg" src="/img/learnIcons/3.svg" onclick="loadStage(3);" />While 1</div></td>
-					<td><div class="stageBox"><img class="stageBoxImg" src="/img/learnIcons/4.svg" onclick="loadStage(4);" />While 2</div></td>
-					<td><div class="stageBox"><img class="stageBoxImg" src="/img/learnIcons/5.svg" onclick="loadStage(5);" />Head</div></td>
+					<td><div class="stageBox"><img class="stageBoxImg" src="/img/learnIcons/1<?php if( $_SESSION["learnStage"] < 1 ) { echo "-lock"; } ?>.svg" onclick="loadStage(1);" />Movement</div></td>
+					<td><div class="stageBox"><img class="stageBoxImg" src="/img/learnIcons/2<?php if( $_SESSION["learnStage"] < 2 ) { echo "-lock"; } ?>.svg" onclick="loadStage(2);" />Repeats</div></td>
+					<td><div class="stageBox"><img class="stageBoxImg" src="/img/learnIcons/3<?php if( $_SESSION["learnStage"] < 3 ) { echo "-lock"; } ?>.svg" onclick="loadStage(3);" />While 1</div></td>
+					<td><div class="stageBox"><img class="stageBoxImg" src="/img/learnIcons/4<?php if( $_SESSION["learnStage"] < 4 ) { echo "-lock"; } ?>.svg" onclick="loadStage(4);" />While 2</div></td>
+					<td><div class="stageBox"><img class="stageBoxImg" src="/img/learnIcons/5<?php if( $_SESSION["learnStage"] < 5 ) { echo "-lock"; } ?>.svg" onclick="loadStage(5);" />Head</div></td>
 				</tr>
 				<tr>
-					<td><div class="stageBox"><img class="stageBoxImg" src="/img/learnIcons/6.svg" onclick="loadStage(6);" />Switch 1</div></td>
-					<td><div class="stageBox"><img class="stageBoxImg" src="/img/learnIcons/7.svg" onclick="loadStage(7);" />Switch 2</div></td>
-					<td><div class="stageBox"><img class="stageBoxImg" src="/img/learnIcons/8.svg" onclick="loadStage(8);" />If</div></td>
-					<td><div class="stageBox"><img class="stageBoxImg" src="/img/learnIcons/9.svg" onclick="loadStage(9);" />Recap</div></td>
+					<td><div class="stageBox"><img class="stageBoxImg" src="/img/learnIcons/6<?php if( $_SESSION["learnStage"] < 6 ) { echo "-lock"; } ?>.svg" onclick="loadStage(6);" />Switch 1</div></td>
+					<td><div class="stageBox"><img class="stageBoxImg" src="/img/learnIcons/7<?php if( $_SESSION["learnStage"] < 7 ) { echo "-lock"; } ?>.svg" onclick="loadStage(7);" />Switch 2</div></td>
+					<td><div class="stageBox"><img class="stageBoxImg" src="/img/learnIcons/8<?php if( $_SESSION["learnStage"] < 8 ) { echo "-lock"; } ?>.svg" onclick="loadStage(8);" />If</div></td>
+					<td><div class="stageBox"><img class="stageBoxImg" src="/img/learnIcons/9<?php if( $_SESSION["learnStage"] < 9 ) { echo "-lock"; } ?>.svg" onclick="loadStage(9);" />Recap</div></td>
 				</tr>
 			</table>
 		</div>
 		<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
 		<script src="http://getbootstrap.com/dist/js/bootstrap.min.js"></script>
 		<script>
-			
+			function loadStage( stageToLoad )
+			{
+				var maxStage = <?php echo $_SESSION["learnStage"]; ?>;
+				if( ! (stageToLoad > maxStage) )
+				{
+					window.location.href = "main.php?mode=1&stage=" + stageToLoad;
+				}
+			}
 		</script>
 	</body>
 </html>

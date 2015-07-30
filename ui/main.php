@@ -4,6 +4,10 @@
 	{
 		header("Location: login.php");
 	}
+	else if( ( $_GET["mode"] == 1 ) && ( $_GET["stage"] > $_SESSION["learnStage"] ) )
+	{
+		header("Location: learn.php");
+	}
 ?>
 <html lang="en">
 	<head>
@@ -12,6 +16,7 @@
 		<meta name="viewport" content="width=device-width, initial-scale=1">
 		<title>RailCode :: Learn</title>
 		<link href="bootstrap.css" rel="stylesheet">
+		<link href='http://fonts.googleapis.com/css?family=Quicksand:400,300,700' rel='stylesheet' type='text/css'>
 		<style>
 			body {
 				padding-top: 50px;
@@ -116,11 +121,11 @@
 			<div class="row" id="codeMapPanel">
 				<div class="col-md-4" id="codePanel">
 					<h2 style="height: 10%; text-align: center; color: white;">Type Your Code Below</h2>
-					<div id="codeBox" style="width: 100%; height: 75%;">
+					<div id="codeBox" style="width: 100%; height: calc(75% - 30px);">
 						<textarea id="railcodeCode"></textarea>
 					</div>
 					<div id="codeButtons" style="width: 100%; height: 15%;">
-						<button style="width: 100%; height: 100%;" onclick="compileAndRun();">Run</button>
+						<button id="" style="width: 100%; height: 100%;" onclick="compileAndRun();">Run</button>
 					</div>
 				</div>
 				<div class="col-md-8" id="mapPanel">
@@ -132,11 +137,23 @@
 		</div>
 		<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
 		<script src="http://getbootstrap.com/dist/js/bootstrap.min.js"></script>
-		<script type="text/javascript" src="/compiler/operators.js">Unable to load Operator Library...</script>
-		<script type="text/javascript" src="/compiler/base64.js">Unable to load Base64 Codec Library...</script>
-		<script src="/js/stationLocations.js"></script>
-		<script src="/js/stationFunctions.js"></script>
-		<script src="/js/learnObject.js"></script>
-		<script src="/js/errorCheck.js"></script>
+		<script type="text/javascript" src="/compiler/operators.js">Unable to load Operator Library</script>
+		<script type="text/javascript" src="/compiler/base64.js">Unable to load Base64 Codec Library</script>
+		<script src="/js/stationLocations.js">Unable to load stationLocations Library</script>
+		<script src="/js/stationFunctions.js">Unable to load stationFunctions Library</script>
+		<script src="/js/learnObject.js">Unable to load learnObject Library</script>
+		<script src="/js/errorCheck.js">Unable to load errorCheck Library</script>
+		<script src="/js/stageCompleteMsg.js">Unable to load stageComplete Message Library</script>
+		<script src="/js/calculatePoints.js">Unable to load points calculation Library</script>
+		<script>
+			if( <?php if( $_GET["mode"] == 1 ) { echo 1; } else { echo 0; }; ?> )
+			{
+				pageLoad("learn"<?php echo ", " . $_GET["stage"] . "-1"; ?>);
+			}
+			else
+			{
+				pageLoad("play");
+			}
+		</script>
 	</body>
 </html>

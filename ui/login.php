@@ -5,6 +5,7 @@
 		<meta name="viewport" content="width=device-width, initial-scale=1">
 		<title>RailCode :: Login</title>
 		<link href="bootstrap.css" rel="stylesheet">
+		<link href='http://fonts.googleapis.com/css?family=Quicksand:400,300,700' rel='stylesheet' type='text/css'>
 		<style>
 			body {
 				padding-top: 50px;
