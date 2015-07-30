@@ -430,57 +430,12 @@ function compileLine( $tokens )
 	{
 		case "if":
 			$currentIndent++;
-			
 			$expr = fetchExpression( $tokens, $i + 1 );
 			$source .= "if( " . $expr["result"] . " )\n{\n";
-			if ( $tokens[ count( $tokens ) - 1 ]["value"] != "then" )
-			{
-				//$source .= "\n" . compile( stitchArray( array_slice( $tokens, $expr["position"] ) ), true ) . "\n}\n";
-				array_pop( $inlineFlagStack );
-				array_push( $inlineFlagStack, true );
-			}
 			break;
-			
-		/*case "else":
-		
-			$currentIndent++;
-			//$source .= "// " . ( ! $inlineFlag ) . "\n\n";
-			if ( ! $inlineFlag )
-			{
-				$source .= "}";
-			}
-		
-			if ( $tokens[ $i + 1 ]["value"] == "if" )
-			{
-				$expr = fetchExpression( $tokens, $i + 2 );
-				$source .= "\nelse if( " . $expr["result"] . " )\n{\n";
-				if ( $tokens[ count( $tokens ) -1 ]["value"] != "then" )
-				{
-					$source .= "\n" . compile( stitchArray( array_slice( $tokens, $expr["position"] ) ), true ) . "\n}\n";
-					array_pop( $inlineFlagStack );
-					array_push( $inlineFlagStack, true );
-				}
-			}
-			else
-			{
-				$source .= "\nelse\n{\n";
-				if ( count( $tokens ) > 1 )
-				{
-					$source .= "\n" . compile( stitchArray( array_slice( $tokens, 1 ) ), true ) . "\n}\n";
-					array_pop( $inlineFlagStack );
-					array_push( $inlineFlagStack, true );
-				}
-			}
-			break;*/
 		
 		case "repeat":
-		
 			$currentIndent++;
-			
-			/*if ( count( $tokens ) == 1 || $tokens[ 1 ]["value"] == "forever" )
-			{
-				$source .= "while( 1 )\n{";
-			}*/
 			if ( $tokens[ count( $tokens ) - 1 ]["value"] == "times" )
 			{
 				$expr = fetchExpression( $tokens, 1 );
@@ -488,40 +443,6 @@ function compileLine( $tokens )
 				$loopMax = "LOOPMAX" . rand();
 				$source .= $loopMax . " = " . $expr["result"] . ";\nfor( " . $loopCounter . " = 0; " . $loopCounter . " < " . $loopMax . "; " . $loopCounter . "++ )\n{\n";
 			}
-			/*else if ( $tokens[ 1 ]["value"] == "until" )
-			{
-				$expr = fetchExpression( $tokens, 2 );
-				$source .= "while( ! ( " . $expr["result"] . " ) )\n{\n";
-			}
-			else if ( $tokens[ 1 ]["value"] == "while" )
-			{
-				$expr = fetchExpression( $tokens, 2 );
-				$source .= "while( " . $expr["result"] . " )\n{\n";
-			}
-			else if ( $tokens[ 1 ]["value"] == "with" )
-			{
-				$kvar = $tokens[ 2 ]["value"];
-				$kdirection = 1;
-				
-				$expr = fetchExpression( $tokens, 4 );
-				
-				$kstart = $expr["result"];
-				
-				$i = $expr["position"];
-				
-				if ( $tokens[ $i ]["value"] == "to" && $tokens[ $i - 1 ]["value"] == "down" )
-				{
-					$kdirection = 0;
-					$i++;
-				}
-				
-				$expr = fetchExpression( $tokens, $i );
-				
-				$kstop = $expr["result"];
-				
-				$source .= "for( " . $kvar . " = " . $kstart . "; " . $kvar . ( $kdirection ? " <= " : " >= " ) . $kstop . "; " . $kvar . ( $kdirection ? "++" : "--" ) . " )\n{\n";
-				
-			}*/
 			else
 			{
 				$expr = fetchExpression( $tokens, 1 );
@@ -529,7 +450,6 @@ function compileLine( $tokens )
 				$loopMax = "LOOPMAX" . rand();
 				$source .= $loopMax . " = " . $expr["result"] . ";\nfor( " . $loopCounter . " = 0; " . $loopCounter . " < " . $loopMax . "; " . $loopCounter . "++ )\n{\n";
 			}
-			
 			break;
 		
 		case "while":
@@ -546,22 +466,12 @@ function compileLine( $tokens )
 				array_push( $currentFunction, "global" );
 				array_pop( $globalVarRegistry );
 			}
-		
 			if ( ! $inlineFlag || $tokens[ 1 ]["value"] != "if" )
 			{
 				$source .= "}";
 			}
-
 			$source .= "\n";
-		
-			// Minor pretty-printing.
-			if ( $tokens[ 1 ]["value"] != "if" && $tokens[ 2 ]["value"] != "repeat" )
-			{
-				$source .= "\n";
-			}
-		
 			$currentIndent = $currentIndent - 1;
-			
 			break;
 		
 		case "forwards":
@@ -598,38 +508,9 @@ function compileLine( $tokens )
 			
 		default:
 			$source = "cmdUndefinded(\"" . $tokens[0]["value"] . "\");";
-		/*default:
-		
-			if ( trim( $tokens[ 0 ][ "value" ] != "" ) )
-			{
-				$source = strtolower( $tokens[ 0 ][ "value" ] ) . "( ";
-				
-				if( count( $tokens ) == 1 )
-				{
-					$source .= ");\n";
-				}
-				else
-				{
-					$expr = fetchExpression( $tokens, $start + 1 );
-					$i = $expr[ "position" ];
-					while( $i < count( $tokens ) )
-					{
-						$source .= $expr[ "result" ] . ", ";
-						$expr = fetchExpression( $tokens, $i );
-						$i = $expr[ "position" ];
-					}
-					$source .= $expr[ "result" ] . " );\n";
-				}
-			}
-			else
-			{
-				$source = "";
-			}
-			break;*/
+			break;
 	}
-	
 	return $source;
-	
 }
 
 function precedence ( $operator )
@@ -638,56 +519,48 @@ function precedence ( $operator )
 	{
 		return 7;
 	}
-	
 	if ( array_search( $operator, array( "", "*", "/", "div", "mod" ) ) != false )
 	{
 		return 6;
 	}
-	
 	if ( array_search( $operator, array( "", "+", "-" ) ) != false )
 	{
 		return 5;
 	}
-	
 	if ( array_search( $operator, array( "", "<", ">", "<=", ">=" ) ) != false )
 	{
 		return 4;
 	}
-	
 	if ( array_search( $operator, array( "", "=", "is", "<>", "is not", "isn't", ) ) != false )
 	{
 		return 3;
 	}
-	
 	if ( array_search( $operator, array( "", "&", "&&" ) ) != false )
 	{
 		return 2;
-	}
-		
+	}	
 	if ( array_search( $operator, array( "", "is in", "is not in", "does not contain", "contains" ) ) != false )
 	{
 		return 1;
 	}
-	
 	if ( array_search( $operator, array( "", "and", "or" ) ) != false )
 	{
 		return 0;
 	}
-
-
-
-
 }
 
 function operatorToFactor( $operator )
 {
 	$operators =	array( "", "+", "-", "*", "/", "^", "&", "&&", ">", ">=", "<", "<=", "=", "is", "<>", "is not", "isn't", "and", "or", "is in", "is not in" );
 	$opfunctions =	array( "", "hpop__binaryAdd", "hpop__binarySubtract", "hpop__binaryMultiply", "hpop__binaryDivide", "hpop__binaryExp", "hpop__binaryConcat", "hpop__binaryConcat2", "hpop__binaryGT", "hpop__binaryGTE", "hpop__binaryLT", "hpop__binaryLTE", "hpop__binaryEq", "hpop__binaryEq", "hpop__binaryNotEq", "hpop__binaryNotEq", "hpop__binaryNotEq", "hpop__binaryAnd", "hpop__binaryOr", "hpop__binaryIn", "hpop__binaryNotIn" );
-		
 	if ( array_search( $operator, $operators ) != false )
+	{
 		return $opfunctions[ array_search( $operator, $operators ) ];
+	}
 	else
+	{
 		return false;
+	}
 }
 
 function fetchExpression( $tokens, $start )
@@ -698,18 +571,13 @@ function fetchExpression( $tokens, $start )
 	$precedenceStack = array();
 	
 	$pflag = false;
-	
 	$curFactor = fetchFactor( $tokens, $start );
-	
 	$i = $curFactor["position"];
-	
 	if ( ! operatorToFactor( $tokens[$i-1]["value"] ) )
 	{
 		return array( "result" => $curFactor["result"], "position" => $curFactor["position"] );
 	}
-	
 	$operator = $tokens[$i-1]["value"];
-	
 	array_push( $expressionStack, $curFactor["result"] );
 	array_push( $expressionStack2, operatorToFactor( $operator ) . "( " );
 	array_push( $precedenceStack, "1" );
@@ -717,44 +585,30 @@ function fetchExpression( $tokens, $start )
 			
 	while( 1 )
 	{
-				
 		$oldFactor = $curFactor;
-		
 		$oldOperator = $operator;
-		
 		$curFactor = fetchFactor( $tokens, $i );
-	
 		$i = $curFactor["position"];
-		
 		if ( ! operatorToFactor( $tokens[$i-1]["value"] ) )
 		{
 			break;
 		}
-	
 		$operator = $tokens[$i-1]["value"];
-		
 		$topOperator = array_pop( $operatorStack );
 		array_push( $operatorStack, $topOperator );
 		
 		if ( precedence( $operator ) > precedence( $oldOperator ) )
 		{
 			array_push( $precedenceStack, "1" );
-			
 			array_push( $expressionStack, $curFactor["result"] );
-			
 			array_push( $expressionStack2, operatorToFactor( $operator ) . "( " );
-
 			array_push( $operatorStack, $operator );
-			
 			$pflag = true;
 		}
 		else if ( precedence( $operator ) < precedence( $topOperator ) )
 		{
-			
 			$thisExpr = array_pop ( $expressionStack );
-			
 			$thisExpr .= ", " . $curFactor["result"] . " ) ";
-												
 			array_push( $expressionStack, $thisExpr );
 						
 			while( precedence( $operator ) < precedence( $topOperator ) )
