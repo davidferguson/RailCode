@@ -13,11 +13,11 @@ var bakerloo = {
 				[{name:"wembley central", x:199, y:239}],
 				[{name:"stonebridge park", x:239, y:269}],
 				[{name:"harlesden", x:279, y:298}],
-				[{name:"willesden junction", x:235, y:332}],
+				[{name:"willesden junction", x:326, y:333}],
 				[{name:"kensal green", x:359, y:359}],
 				[{name:"queen's park", x:406, y:392}],
 				[{name:"kilburn park", x:444, y:423}],
-				[{name:"maida vale", x:484, y:435}],
+				[{name:"maida vale", x:484, y:454}],
 				[{name:"warwick avenue", x:524, y:483}],
 				[{name:"paddington", x:636, y:510}],
 				[{name:"edgware road", x:692, y:432}],
@@ -44,7 +44,7 @@ var waterloo = {
 		{
 			name: "waterloo and city",
 			locations: [
-				[{name:"waterloo", x:24, y:286}],
+				[{name:"waterloo", x:24, y:268}],
 				[{name:"bank", x:204, y:23}]
 			]
 		}
@@ -57,7 +57,7 @@ var hammersmith = {
 	startStation: "hammersmith",
 	lines: [
 		{
-			name: "hammersmith",
+			name: "hammersmith and city",
 			locations: [
 				[{name:"hammersmith", x:58, y:662}],
 				[{name:"goldhawk road", x:58, y:624}],
