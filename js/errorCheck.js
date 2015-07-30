@@ -8,15 +8,21 @@ function pageLoad(gameMode, stage, step)
 	{
 		mode = 'learn';
 		currentStage = stage;
-		currentStep = step;
+		if( step != undefined )
+		{
+			console.log("SETTING STEP");
+			currentStep = step;
+		}
 		setup(stages[currentStage].step[currentStep].objectToUse, stages[currentStage].step[currentStep].startLine, stages[currentStage].step[currentStep].startStation);
 		document.getElementById('trainInfoPanel').innerHTML = stages[currentStage].step[currentStep].instruction;
 	}
 	else
 	{
 		mode = 'play';
-		generatePlayValues();
-		playSetup();
+		generatePlayValues( function ()
+		{
+			playSetup();
+		});
 	}
 }
 
@@ -94,7 +100,8 @@ function checkResult(stepSuccess, tubeStations, tubeEndLine, userCode, error, re
 	if (continueOn)
 	{
 		//the user's code was correct, proceed to the next step or load another play image
-		displayCorrect();
+		var codePoints = calculatePoints(userCode);
+		displayCorrect(codePoints);
 	}
 	else
 	{
@@ -103,15 +110,22 @@ function checkResult(stepSuccess, tubeStations, tubeEndLine, userCode, error, re
 	}
 }
 
-function displayCorrect()
+function displayCorrect( codePoints )
 {
 	//this function is run if the user's code was correct for the learn mode
 	//it presents a nice message and asks them to continue
 	
 	document.getElementById('trainInfoPanel').style.backgroundColor = '#BCF5A9';
-	document.getElementById('trainInfoPanel').innerHTML = 'Well Done! You got that spot on.';
-	document.getElementById('codeButtons').innerHTML = '<button style="width: 100%; height: 100%; background-color: #BCF5A9;" onclick="nextStep();">Continue</button>';
-	document.getElementById("railcodeCode").value = "";
+	if( mode == "play" )
+	{
+		document.getElementById('trainInfoPanel').innerHTML = 'Well Done! You got that spot on, and your code added <b>' + codePoints + '</b> points to your highscore!</br>If you want, you can save your solution as a challenge which will allow your friends to try and beat your code score!';
+		document.getElementById('codeButtons').innerHTML = '<button style="width: 40%; height: 100%; background-color: #F5ECCE;" onclick="saveSolution(' + codePoints + ');">Save Solution as Challenge</button><button style="width: 60%; height: 100%; background-color: #BCF5A9;" onclick="nextStep();">Continue</button>';
+	}
+	else
+	{
+		document.getElementById('trainInfoPanel').innerHTML = 'Well Done! You got that spot on.';
+		document.getElementById('codeButtons').innerHTML = '<button style="width: 100%; height: 100%; background-color: #BCF5A9;" onclick="nextStep();">Continue</button>';
+	}
 }
 
 function displayIncorrect(error)
@@ -134,6 +148,7 @@ function displayIncorrect(error)
 
 function nextStep()
 {
+	document.getElementById("railcodeCode").value = "";
 	if (mode == 'learn')
 	{
 		if (stages[currentStage].step.length - 1 == currentStep)
@@ -142,17 +157,23 @@ function nextStep()
 			if (stages.length-1 == currentStage)
 			{
 				//the user has completed all the levels
-				//Don't forget to update the user's progress in the DB
-				//WE ARE HERE
 				// The user has now finished the learn mode.
+				http.open('get', '/ui/process.php?action=updateStage&newStage=' + currentStage+1, false);
+				http.onload = function ()
+				{
+					window.location = "main.php";
+				}
+				http.send( null );
+				alert(stageCompleteMsg[currentStage]);
 			}
 			else
 			{
+				alert(stageCompleteMsg[currentStage]);
 				//go to the next stage
 				currentStage++;
 				currentStep = 0;
-				//Don't forget to update the user's progress in the DB
-				//WE ARE HERE
+				http.open('get', '/ui/process.php?action=updateStage&newStage=' + currentStage, false);
+				http.send( null );
 			}
 		}
 		else
@@ -170,8 +191,12 @@ function nextStep()
 	else
 	{
 		//this is play mode
-		generatePlayValues();
-		playSetup();
+		document.getElementById('trainInfoPanel').style.backgroundColor = '#F2F5A9';
+		document.getElementById('codeButtons').innerHTML = '<button style="width: 100%; height: 100%;" onclick="compileAndRun();">Run</button>';
+		generatePlayValues( function ()
+		{
+			playSetup();
+		});
 	}
 }
 
