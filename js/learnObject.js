@@ -493,7 +493,7 @@ var stages = [
 			startStation: 'queen\'s park',
 			stations: ["error"],
 			startLine: '3',
-			endLine: '3',
+			endLine: 'error',
 			objectToUse: multiple
 		},
 		{
@@ -529,14 +529,14 @@ var stages = [
 			mustInclude: ['if "Jubilee" is in the switchLines then\nswitch line to "Jubilee"\nend if'],
 			stepSuccess: true,
 			startStation: 'paddington',
-			stations: ["paddington"],
+			stations: [],
 			startLine: '3',
 			endLine: '3',
 			objectToUse: multiple
 		},
 		{
 			instruction: "Again nothing happened. Again, this is because you cannot switch to the <span class='instructionNameText'>Jubilee Line</span> from <span class='instructionNameText'>Paddington</span> station. The only lines available to switch from <span class='instructionNameText'>Paddington</span> station in this map are the <span class='instructionNameText'>Circle Line</span>, the <span class='instructionNameText'>Bakerloo Line</span> and the <span class='instructionNameText'>Hammersmith and City Line</span>. Again using <span class='instructionCodeText'>if</span>, this time try switching to the <span class='instructionNameText'>Hammersmith and City Line</span>.",
-			mustInclude: ['if "Jubilee" is in the switchLines then\nswitch line to "Hammersmith and City"\nend if'],
+			mustInclude: ['if "Hammersmith and City" is in the switchLines then\nswitch line to "Hammersmith and City"\nend if'],
 			stepSuccess: true,
 			startStation: 'paddington',
 			stations: ["paddington"],
@@ -545,7 +545,7 @@ var stages = [
 			objectToUse: multiple
 		},
 		{
-			instruction: "Excellent. Now, using <span class='instructionCodeText'>if</.b> whenever you need to switch line, go to <span class='instructionNameText'>Marble Arch</span> station.",
+			instruction: "Excellent. Now, using <span class='instructionCodeText'>if</span> whenever you need to switch line, go to <span class='instructionNameText'>Marble Arch</span> station.",
 			mustInclude: ['if','switch line'],
 			stepSuccess: true,
 			startStation: 'paddington',
@@ -588,7 +588,7 @@ var stages = [
 			objectToUse: multiple
 		},
 		{
-			instruction: "Now only using <span class='instructionCodeText'>backwards</span> , go back to <span class='instructionNameText'>High Street Kensington</span>.",
+			instruction: "Now only using <span class='instructionCodeText'>backwards</span> , go back to <span class='instructionNameText'>High Street Kensington</span>. You may (or may not) need to set your <span class='instructionCodeText'>head</span>ing first!",
 			mustInclude: ['backwards'],
 			stepSuccess: true,
 			startStation: 'paddington',
@@ -602,16 +602,16 @@ var stages = [
 			mustInclude: ['repeat'],
 			stepSuccess: true,
 			startStation: 'high street kensington',
-			stations: ["paddinton"],
+			stations: ["paddington"],
 			startLine: '2',
 			endLine: '2',
 			objectToUse: multiple
 		},
 		{
-			instruction: "Fab! Again using <span class='instructionCodeText'>repeat</span> , go back to... you guessed it: <span class='instructionNameText'>High Street Kensington</span> station.",
+			instruction: "Fab! Again using <span class='instructionCodeText'>repeat</span> , go back to... you guessed it: <span class='instructionNameText'>High Street Kensington</span> station. Again, you may need to set your <span class='instructionCodeText'>head</span>ing first.",
 			mustInclude: ['repeat'],
 			stepSuccess: true,
-			startStation: 'paddinton',
+			startStation: 'paddington',
 			stations: ["high street kensington"],
 			startLine: '2',
 			endLine: '2',
@@ -658,7 +658,7 @@ var stages = [
 			objectToUse: multiple
 		},
 		{
-			instruction: "OK. Now go to <span class='instructionNameText'>Royal Oak</span> station, on the other part of the <span class='instructionNameText'>Circle Line</span> after the junction at <span class='instructionNameText'>Edgware Road</span> station. You may (or may not) need to set your <span class='instructionCodeText'>head</span>ing first!",
+			instruction: "OK. Now go to <span class='instructionNameText'>Royal Oak</span> station, on the other part of the <span class='instructionNameText'>Circle Line</span> after the junction at <span class='instructionNameText'>Edgware Road</span> station.",
 			stepSuccess: true,
 			startStation: 'gloucester road',
 			stations: ["royal oak"],
