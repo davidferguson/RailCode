@@ -1,9 +1,5 @@
 <?php
 	session_start();
-	if( ! isset($_SESSION["email"]) )
-	{
-		header("Location: login.php");
-	}
 ?>
 <html lang="en">
 	<head>
@@ -52,9 +48,23 @@
 				</div>
 				<div id="navbar" class="collapse navbar-collapse">
 					<ul class="nav navbar-nav">
-						<li><a href="learn.php">Learn</a></li>
-						<li><a href="play.php">Play</a></li>
-						<li><a href="challenge.php">Challenge</a></li>
+						<?php
+							if( isset($_SESSION["email"]) )
+							{
+								echo '
+									<li><a href="learn.php">Learn</a></li>
+									<li><a href="main.php">Play</a></li>
+									<li><a href="challenge.php">Challenge</a></li>
+									<li><a href="process.php?action=logout">Logout</a></li>
+								';
+							}
+							else
+							{
+								echo '
+									<li><a href="login.php">Login</a></li>
+								';
+							}
+						?>
 					</ul>
 				</div>
 			</div>
@@ -873,36 +883,37 @@
 					 x="-35.428391"
 					 y="-28.236372"
 					 id="text11657"
-					 sodipodi:linespacing="125%"><a xlink:href= "learn.php"><tspan
+					 sodipodi:linespacing="125%"><?php if( isset($_SESSION["email"]) ){ echo '<a xlink:href= "learn.php">'; } ?><tspan
 					   sodipodi:role="line"
 					   id="tspan11659"
 					   x="-35.428391"
 					   y="-28.236372"
-					   style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-family:Quicksand;-inkscape-font-specification:'Quicksand Bold';fill:#dc241f;fill-opacity:1">learn</tspan></a></text>
+					   style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-family:Quicksand;-inkscape-font-specification:'Quicksand Bold';fill:#dc241f;fill-opacity:1">learn</tspan><?php if( isset($_SESSION["email"]) ){ echo '</a>'; } ?></text>
 				  <text
 					 xml:space="preserve"
 					 style="font-style:normal;font-weight:normal;font-size:24px;line-height:125%;font-family:Sans;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none"
 					 x="50.571613"
 					 y="-28.236326"
 					 id="text11657-4"
-					 sodipodi:linespacing="125%"><a xlink:href= "main.php"><tspan
+					 sodipodi:linespacing="125%"><?php if( isset($_SESSION["email"]) ){ echo '<a xlink:href= "main.php">'; } ?><tspan
 					   sodipodi:role="line"
 					   id="tspan11659-1"
 					   x="50.571613"
 					   y="-28.236326"
-					   style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-family:Quicksand;-inkscape-font-specification:'Quicksand Bold';fill:#751056;fill-opacity:1">play</tspan></a></text>
+					   style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-family:Quicksand;-inkscape-font-specification:'Quicksand Bold';fill:#751056;fill-opacity:1">play</tspan><?php if( isset($_SESSION["email"]) ){ echo '</a>'; } ?></text>
 				  <text
 					 xml:space="preserve"
 					 style="font-style:normal;font-weight:normal;font-size:24px;line-height:125%;font-family:Sans;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none"
 					 x="120.5716"
 					 y="-28.236326"
 					 id="text11657-4-8"
-					 sodipodi:linespacing="125%"><a xlink:href= "challenge.php"><tspan
+					 sodipodi:linespacing="125%"><?php if( isset($_SESSION["email"]) ){ echo '<a xlink:href= "challenge.php">'; } ?><tspan
+					 <tspan
 					   sodipodi:role="line"
 					   id="tspan11659-1-8"
 					   x="120.5716"
 					   y="-28.236326"
-					   style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-family:Quicksand;-inkscape-font-specification:'Quicksand Bold';fill:#007229;fill-opacity:1">challenge</tspan></a></text>
+					   style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-family:Quicksand;-inkscape-font-specification:'Quicksand Bold';fill:#007229;fill-opacity:1">challenge</tspan><?php if( isset($_SESSION["email"]) ){ echo '</a>'; } ?></text>
 				  <text
 					 xml:space="preserve"
 					 style="font-style:normal;font-weight:normal;font-size:64.19324493px;line-height:125%;font-family:Sans;letter-spacing:0px;word-spacing:0px;fill:#0019a8;fill-opacity:1;stroke:none"
