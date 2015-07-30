@@ -10,7 +10,18 @@ function calculatePoints(code)
 			startChar = code.indexOf(pointStrings.strings[i], startChar) + 1;
 		}
 	}
-	return points;
+	if (points > 100)
+	{
+		return 100;
+	}
+	else if (points < 0)
+	{
+		return 0;
+	}
+	else
+	{
+		return points;
+	}
 }
 
 var pointStrings = {
