@@ -119,7 +119,7 @@ function displayCorrect( codePoints )
 	if( mode == "play" )
 	{
 		document.getElementById('trainInfoPanel').innerHTML = 'Well Done! You got that spot on, and your code added <b>' + codePoints + '</b> points to your highscore!</br>If you want, you can save your solution as a challenge which will allow your friends to try and beat your code score!';
-		document.getElementById('codeButtons').innerHTML = '<button style="width: 40%; height: 100%; background-color: #F5ECCE;" onclick="saveSolution(' + codePoints + ');">Save Solution as Challenge</button><button style="width: 60%; height: 100%; background-color: #BCF5A9;" onclick="nextStep();">Continue</button>';
+		document.getElementById('codeButtons').innerHTML = '<button style="width: 40%; height: 100%; background-color: #F5ECCE;" onclick="startChallenge(' + codePoints + ');">Save Solution as Challenge</button><button style="width: 60%; height: 100%; background-color: #BCF5A9;" onclick="nextStep();">Continue</button>';
 	}
 	else
 	{
