@@ -2,6 +2,7 @@
 /*
 
 Copyright (c) 2006 Tyler J. Vano
+Modified 2012 - 2015 David Ferguson
 
 Permission is hereby granted, free of charge, to any person
 obtaining a copy of this software and associated documentation
@@ -26,14 +27,37 @@ OTHER DEALINGS IN THE SOFTWARE.
 
 */
 
+/*
+
+compiler.php
+
+This file takes in a base64 encoded string of the RailCode programming
+language and translates it into JavaScript. The RailCode language is
+very similar to JavaScript, except RailCode uses none of the syntax
+such as "{", "(", ")", "}", ";" that JavaScript requires, which could
+potentially confuse those new to programming. Instead of an closing
+brace at the end of loops and conditions, the words "end if", "end
+repeat" or "end while" are used accordingly. Once the code has been
+translated into JavaScript, it is sent back to main.php where is is
+executed.
+
+This file was originally written by Tyler J. Vano for http://creysoft.com/jscard/
+The project was abandoned and the source made available for download at http://creysoft.com/xtalk/
+This file was modified, updated and fixed by David Ferguson for http://jscard.org/
+It has been modified by David Ferguson and Andrew Ferguson for http://railcode.tk/
+
+Many thanks to Tyler Vano for creating the original version.
+
+*/
+
 
 define( "TOKEN_STATE_WHITESPACE",	"0" );
-define( "TOKEN_STATE_IDENTIFIER",		"1" );
-define( "TOKEN_STATE_STRING",			"2" );
+define( "TOKEN_STATE_IDENTIFIER",	"1" );
+define( "TOKEN_STATE_STRING",		"2" );
 define( "TOKEN_STATE_OPERATOR",		"3" );
 
-define( "OPERATOR_BINARY",				"0" );
-define( "OPERATOR_UNARY", 				"1" );
+define( "OPERATOR_BINARY",			"0" );
+define( "OPERATOR_UNARY", 			"1" );
 
 
 $waitEndings = array();
@@ -45,30 +69,6 @@ $currentIndent = 0;
 function tryLog ( $something )
 {
 
-}
-
-function clearLog()
-{
-$file = 'output.html';
-
-file_put_contents($file, "");
-}
-
-function logThis ( $something )
-{
-$file = 'output.html';
-
-$something = str_replace("\\n", "<br>", $something);
-$something = str_replace("\n", "<br>", $something);
-
-$current = file_get_contents($file);
-$current .= "<p>";
-$current .= $something;
-$current .= "</p>";
-
-//$current = $something;
-
-file_put_contents($file, $current);
 }
 
 
@@ -1199,8 +1199,6 @@ function stripComments( $someline )
 
 function compile( $script, $noheader = false )
 {
-	clearLog();
-	
 	global $inlineFlagStack;
 	global $localVarRegistry;
 	global $currentFunction;

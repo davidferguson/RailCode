@@ -1,12 +1,14 @@
 <?php
-	
-	function print_r2($val){
-		echo "<html><body>";
-        echo '<pre>';
-        print_r($val);
-        echo  '</pre>';
-		echo "</body></html>";
-}
+/*
+
+getData.php
+
+This file fetches live information from Transport for London's
+open data portal about the current status of the lines in the
+London Underground. The data is then sorted and processed into
+a JSON format and sent to main.php
+
+*/
 	
 	$url = "http://cloud.tfl.gov.uk/TrackerNet/LineStatus";
 	$xml = simplexml_load_file( $url );
