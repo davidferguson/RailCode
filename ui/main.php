@@ -137,14 +137,17 @@
 		</div>
 		<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
 		<script src="http://getbootstrap.com/dist/js/bootstrap.min.js"></script>
-		<script type="text/javascript" src="/compiler/operators.js">Unable to load Operator Library</script>
-		<script type="text/javascript" src="/compiler/base64.js">Unable to load Base64 Codec Library</script>
-		<script src="/js/stationLocations.js">Unable to load stationLocations Library</script>
-		<script src="/js/stationFunctions.js">Unable to load stationFunctions Library</script>
-		<script src="/js/learnObject.js">Unable to load learnObject Library</script>
-		<script src="/js/errorCheck.js">Unable to load errorCheck Library</script>
-		<script src="/js/stageCompleteMsg.js">Unable to load stageComplete Message Library</script>
+		<script src="/compiler/operators.js">Unable to load Operator Library</script>
+		<script src="/compiler/base64.js">Unable to load Base64 Codec Library</script>
+		<script src="/js/stationLocations.js">Unable to load the station locations Library</script>
+		<script src="/js/opendata.js">Unable to load the Transport for London open data Library</script>
+		<script src="/js/language.js">Unable to load the RailCode language Library</script>
+		<script src="/js/stationFunctions.js">Unable to load the core station functions Library</script>
+		<script src="/js/learnObject.js">Unable to load learn data Library</script>
+		<script src="/js/errorCheck.js">Unable to load error checking Library</script>
+		<script src="/js/stageCompleteMsg.js">Unable to load stage complete message Library</script>
 		<script src="/js/calculatePoints.js">Unable to load points calculation Library</script>
+		<script src="/js/playFunctions.js">Unable to load play functions Library</script>
 		<script>
 			if( <?php if( $_GET["mode"] == 1 ) { echo 1; } else { echo 0; }; ?> )
 			{
