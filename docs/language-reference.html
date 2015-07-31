@@ -1,0 +1,33 @@
+<h1>RailCode: Language Reference</h1>
+
+<h3>Forgotten how to do something? Need a recap-at-a-glance? This is the dictionary of everything in RailCode's language</h3>
+
+<h2>Movement</h2>
+<h3>Forwards</h3>
+<h4>Moves the tube forwards by one station, from the station indicated by 'Current Station', to the station indicated by 'Forwards Station'.</h4>
+<h3>Backwards</h3>
+<h4>Moves the tube backwards by one station, from the station indicated by 'Current Station', to the station indicated by 'Backwards Station'.</h4>
+<br />
+
+<h2>Changing Directions</h2>
+<h3>Switch Line</h3>
+<h4>Switches the tube from its current line to the other line. This command should only be used if there is only one other line for the tube to switch to, otherwise the <b>switch line to</b> instruction should be used instead.</h4>
+<h3>Switch Line to &lt;<i>lineToSwitchTo</i>&gt;</h3>
+<h4>Switches the tube from its current line to the  line specified by <i>lineToSwitchTo</i>. Please be aware that <i>lineToSwitchTo</i> needs to be surrounded by double quotes (&quot;)</h4>
+<h3>Head &lt;<i>direction</i>&gt;</h3>
+<h4>Changes the direction that the tube will take when it reaches a split in the line. By default the tube will always go <i>left</i>, but this can be changed to <i>right</i>. The <i>direction</i> does not need to be in quotes.</h4>
+
+<h2>Looping</h2>
+<h3>while canMoveForwards do</h3>
+<h4>Any code between this and <b>end while</b> will be run until the tube can no longer move <b>forwards</b>.</h4>
+<h3>while canMoveBackwards do</h3>
+<h4>Any code between this and <b>end while</b> will be run until the tube can no longer move <b>backwards</b>.</h4>
+<h3>while the currentStation is not &lt;<i>stationName</i>&gt; do</h3>
+<h4>Any code between this and <b>end while</b> will be run until the station that the tube is on is <i>stationName</i>. Please note that <i>stationName</i> must be surrounded by double-quotes (&quot;).</h4>
+<h3>repeat &lt;<i>repeatNumber</i>&gt; times</h3>
+<h4>Any code between this and <b>end repeat</b> will be run <i>repeatNumber</i> times. Please note that no quotes around <i>repeatNumber</i> are needed.</h4>
+<br />
+
+<h2>Decisions</h2>
+<h3>if &lt;<i>lineName</i>&gt; is not in the switchLines then</h3>
+<h4>Any code between this and <b>end if</b> will be run as long as the tube can switch to the line specified by <i>lineName</i>. Please note that<i>lineName</i> must be surrounded by double-quotes (&quot;).</h4>
