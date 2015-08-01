@@ -1,5 +1,21 @@
+/*
+calculatePoints.js
+
+This file contains functions and objects that generate a point/rank for
+the user's code
+
+It is easily expandable and has support for both good and bad programming
+practises
+
+*/
+
 function calculatePoints(code)
 {
+	/*
+	This function takes in the code the user has written as
+	a parameter, and uses rules set out in the pointStrings
+	object to give the code a rank, which is then returned
+	*/
 	var points = 50;
 	for (var i = 0; i < pointStrings.strings.length; i++)
 	{
@@ -25,6 +41,11 @@ function calculatePoints(code)
 }
 
 var pointStrings = {
+	/*
+	This object contains a list of rules that generate the user's points
+	It contains a list of strings and the number of points that should
+	be added to the users score if they include that string in their code
+	*/
 	strings: [
 		'then\nswitch line to',
 		'repeat',
