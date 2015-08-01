@@ -96,6 +96,9 @@
 						</div>';
 					}
 				?>
+				<div class="alert alert-danger" role="alert">
+					<strong>Please use &quot;admin@railcode.tk&quot; as the username and &quot;pass&quot; as the password</strong>
+				</div>
 				<h2 class="form-signin-heading">Step on Board...</h2>
 				<label for="inputEmail" class="sr-only">Email address</label>
 				<input type="email" id="inputEmail" class="form-control" placeholder="Email address" name="inputEmail" required="" autofocus="">
