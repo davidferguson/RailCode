@@ -1,5 +1,20 @@
 <?php
 	session_start();
+	
+	function dbConnect()
+	{
+		$dbConn = mysql_connect('localhost', 'balgreen_railcod', 'verySecret');
+		if ( ! $dbConn )
+		{
+			die("Unable to connect to database: " . mysql_error());
+		}
+		$db_selected = mysql_select_db('balgreen_railcode', $dbConn);
+		if ( ! $db_selected )
+		{
+			die ("Unable to select database: " . mysql_error());
+		}
+	}
+	
 	if( ! isset($_SESSION["email"]) )
 	{
 		header("Location: login.php");
@@ -120,7 +135,7 @@
 			</div>
 			<div class="row" id="codeMapPanel">
 				<div class="col-md-4" id="codePanel">
-					<h2 style="height: 10%; text-align: center; color: white;">Type Your Code Below</h2>
+					<h2 style="height: 10%; text-align: center; color: white;" id="codeBoxHeader">Type Your Code Below</h2>
 					<div id="codeBox" style="width: 100%; height: calc(75% - 30px);">
 						<textarea id="railcodeCode"></textarea>
 					</div>
@@ -149,14 +164,44 @@
 		<script src="/js/calculatePoints.js">Unable to load points calculation Library</script>
 		<script src="/js/playFunctions.js">Unable to load play functions Library</script>
 		<script>
-			if( <?php if( $_GET["mode"] == 1 ) { echo 1; } else { echo 0; }; ?> )
+			<?php if( $_GET["mode"] == 1 )
 			{
-				pageLoad("learn"<?php echo ", " . $_GET["stage"] . "-1"; ?>);
+				echo "pageLoad('learn', (" . $_GET["stage"] . "-1));";
+			}
+			else if($_GET["mode"] == 2 )
+			{
+				dbConnect();
+				$dbresult = mysql_query("SELECT * FROM `challenges` WHERE id='" . $_GET["challenge"] . "'");
+				$dbresult = mysql_fetch_array( $dbresult, MYSQL_ASSOC );
+				$activity = ($dbresult["activity"]);
+				$startStation = base64_decode($dbresult["startstation"]);
+				$startLine = base64_decode($dbresult["startline"]);
+				$endStation = base64_decode($dbresult["endstation"]);
+				$openData = base64_decode($dbresult["opendata"]);
+				
+				echo "\nvar setupActivity = " . $activity . ";\n";
+				echo "var startStation = \"" . $startStation . "\";\n";
+				echo "var startLine = " . $startLine . ";\n";
+				echo "var endStation = \"" . $endStation . "\";\n";
+				if( $openData != "" )
+				{
+					echo "var openData = " . $openData. ";\n";
+				}
+				else
+				{
+					echo "var openData = '';\n";
+				}
+				echo "//LOAD CHALLENGE;\n";
+				echo "mode = 'challenge';\nchallengeInit(setupActivity, startLine, startStation, endStation, function() {
+					challengeSetup();
+				});";
+				echo "var theChallengeId = " . $_GET["challenge"];
 			}
 			else
 			{
-				pageLoad("play");
+				echo "pageLoad('play');";
 			}
+			?>
 		</script>
 	</body>
 </html>
