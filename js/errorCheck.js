@@ -1,9 +1,28 @@
+/*
+errorCheck.js
+
+This file handles all the error checking for the learn, play, and therefore
+challenge modes. It is passed various information regarding the last run
+of the RailCode train, and then alters the page depending on if the
+user's code was correct, or if they did not get the task correct
+
+This file also handles the initial setup of of all modes, and handles the
+requests to save the users progress into the database
+
+*/
+
 currentStage = 0; //contains the number (zero-indexed) of the current stage the user is on
 currentStep = 0; //contains the number (zero-indexed) of the current step the user is on
 mode = ''; //contains the mode (play or learn) that the user is on
 
 function pageLoad(gameMode, stage, step)
 {
+	/*
+	Takes in three parameters, the mode to be loaded in and the stage and step
+	of the learn mode to be loaded in if the mode to be loaded in is learn
+	
+	From this the function calls other various setup functions and initialises variables
+	*/
 	if (gameMode == 'learn')
 	{
 		mode = 'learn';
@@ -28,7 +47,10 @@ function pageLoad(gameMode, stage, step)
 
 function checkResult(stepSuccess, tubeStations, tubeEndLine, userCode, error, requiredStation)
 {
-	//this function is run when the user has typed their code, pressed 'Run Code', and the code has been compiled and run
+	/*
+	This function looks at the various parameters passed to it, and from
+	these deceides if the user has sucessfully completed the task or not
+	*/
 	
 	var continueOn = true;
 	
@@ -112,14 +134,33 @@ function checkResult(stepSuccess, tubeStations, tubeEndLine, userCode, error, re
 
 function displayCorrect( codePoints )
 {
-	//this function is run if the user's code was correct for the learn mode
-	//it presents a nice message and asks them to continue
+	/*
+	this function is run if the user's code was correct for the learn mode
+	it presents a nice message and asks them to continue
+	*/
 	
 	document.getElementById('trainInfoPanel').style.backgroundColor = '#BCF5A9';
 	if( mode == "play" )
 	{
 		document.getElementById('trainInfoPanel').innerHTML = 'Well Done! You got that spot on, and your code added <b>' + codePoints + '</b> points to your highscore!</br>If you want, you can save your solution as a challenge which will allow your friends to try and beat your code score!';
 		document.getElementById('codeButtons').innerHTML = '<button style="width: 40%; height: 100%; background-color: #F5ECCE;" onclick="startChallenge(' + codePoints + ');">Save Solution as Challenge</button><button style="width: 60%; height: 100%; background-color: #BCF5A9;" onclick="nextStep();">Continue</button>';
+	}
+	else if( mode == "challenge" )
+	{
+		document.getElementById('trainInfoPanel').innerHTML = 'Sumbitting solution to server...';
+		document.getElementById('codeButtons').innerHTML = '<button style="width: 100%; height: 100%; background-color: #BCF5A9;">Please Wait...</button>';
+		submitSolution( codePoints, function( result ) {
+			if( result )
+			{
+				document.getElementById('trainInfoPanel').innerHTML = 'Well Done! You got that spot on, and your code added <b>' + codePoints + '</b> points to your highscore!</br>Your code has also been submitted to this challenge, to help other users improve!';
+				document.getElementById('codeButtons').innerHTML = '<button style="width: 100%; height: 100%; background-color: #BCF5A9;" onclick="showOtherCodeList();">See other users\'s code</button>';
+			}
+			else
+			{
+				document.getElementById('trainInfoPanel').innerHTML = 'Oh no!</br>It seems that your code didn\'t submit to the server properly. You can click "Try again" to try and resubmit your code. Sorry.';
+				document.getElementById('codeButtons').innerHTML = '<button style="width: 100%; height: 100%; background-color: #BCF5A9;" onclick="submitSolution(' + codePoints + ');">Try Again</button>';
+			}
+		});
 	}
 	else
 	{
@@ -130,8 +171,10 @@ function displayCorrect( codePoints )
 
 function displayIncorrect(error)
 {
-	//this function is run if the user's code was incorrect for the learn mode
-	//it presents an error message and asks them to retry
+	/*
+	this function is run if the user's code was incorrect for the learn mode
+	it presents an error message and asks them to retry
+	*/
 	
 	if (!stages[currentStage].step[currentStep].hasOwnProperty("customError") || error == '')
 	{
@@ -143,11 +186,19 @@ function displayIncorrect(error)
 		document.getElementById('trainInfoPanel').innerHTML = "Oh dear! That didn't quite work. " + error + ' ' + stages[currentStage].step[currentStep].customError;
 	}
 	document.getElementById('trainInfoPanel').style.backgroundColor = '#F5A9A9';
-	document.getElementById('codeButtons').innerHTML = '<button style="width: 100%; height: 100%; background-color: #F5A9A9;" onclick="retryStep();">Retry</button>'
+	document.getElementById('codeButtons').innerHTML = '<button style="width: 100%; height: 100%; background-color: #F5A9A9;" onclick="retryStep();">Retry</button>';
 }
 
 function nextStep()
 {
+	/*
+	This mode allows the ser to proceed to the next step in the learn mode
+	if their code is correct
+	
+	If the mode is play, then it calls functions to generate a new challenge
+	for the user
+	*/
+	var http;
 	document.getElementById("railcodeCode").value = "";
 	if (mode == 'learn')
 	{
@@ -158,11 +209,12 @@ function nextStep()
 			{
 				//the user has completed all the levels
 				// The user has now finished the learn mode.
+				http = new XMLHttpRequest();
 				http.open('get', '/ui/process.php?action=updateStage&newStage=' + currentStage+1, false);
 				http.onload = function ()
 				{
 					window.location = "main.php";
-				}
+				};
 				http.send( null );
 				alert(stageCompleteMsg[currentStage]);
 			}
@@ -172,6 +224,7 @@ function nextStep()
 				//go to the next stage
 				currentStage++;
 				currentStep = 0;
+				http = new XMLHttpRequest();
 				http.open('get', '/ui/process.php?action=updateStage&newStage=' + currentStage, false);
 				http.send( null );
 			}
@@ -202,6 +255,12 @@ function nextStep()
 
 function retryStep()
 {
+	/*
+	This mode allows the ser to retry the stage that they did not sucseed at
+	
+	If the mode is play, then it calls functions to generate a the same challenge
+	for the user
+	*/
 	if (mode == 'learn')
 	{
 		setup(stages[currentStage].step[currentStep].objectToUse, stages[currentStage].step[currentStep].startLine, stages[currentStage].step[currentStep].startStation);
