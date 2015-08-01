@@ -1,3 +1,15 @@
+/*learnObject.js
+
+This file contains an object, stages, which contains information about every step of the learn mode
+Each step has a description of what the user should do in order to complete the step, an array of
+strings stat must be included in the user's code, a boolean variable indicating whether the step should
+run sucessfully or if an error is OK, the station the step should start on, the list of stations that should
+be passed through, the number of the line that should be started on, the number of the line that
+should be ended on, and the required object in the stationLocations.js file listing all the names of
+the stations and their X and Y coordinates
+
+*/
+
 var stages = [
 {
 	step: [
@@ -22,7 +34,7 @@ var stages = [
 			objectToUse: waterloo
 		},
 		{
-			instruction: "Well done! The tube has just moved back from <span class='instructionNameText'>Bank</span> to <span class='instructionNameText'>Waterloo</span>. To find out which station is <span class='instructionCodeText'>forwards</span> and which station is <span class='instructionCodeText'>backwards</span>, take a look at the 'Next Station' and 'Previous Station'  boxes in the top right of the map area. The station displayed in the 'Next' box, and all the ones after it on the line are the ones you will go to with <span class='instructionCodeText'>forwards</span>, the 'Previous' box is for <span class='instructionCodeText'>backwards</span>. If <span class='instructionNameText'>NA</span> is displayed, the tube cannot move in that direction. Click 'Run' to continue. (No need to type anything)",
+			instruction: "Well done! The tube has just moved back from <span class='instructionNameText'>Bank</span> to <span class='instructionNameText'>Waterloo</span>. To find out which station is <span class='instructionCodeText'>forwards</span> and which station is <span class='instructionCodeText'>backwards</span>, take a look at the 'Next Station' and 'Previous Station'  in the top of the map area. The station displayed in the 'Next' box, and all the ones after it on the line are the ones you will go to with <span class='instructionCodeText'>forwards</span>, the 'Previous' box is for <span class='instructionCodeText'>backwards</span>. If <span class='instructionNameText'>NA</span> is displayed, the tube cannot move in that direction. Click 'Run' to continue. (No need to type anything)",
 			stepSuccess: true,
 			startStation: 'waterloo',
 			stations: [],
@@ -149,7 +161,7 @@ var stages = [
 			objectToUse: bakerloo
 		},
 		{
-			instruction: "You see, I was right. Your tube is now at <span class='instructionNameText'>Elephant & Castle</span>, the last station on the <span class='instructionNameText'>Bakerloo</span> line. Not only that, but after moving forward past all 16 stations on the Bakerloo line, your program stopped and an error was displayed. This is not a good thing, because you may have other instructions that come after your <span class='instructionCodeText'>repeat 50 times</span> code. If your program stops, those instructions will not be run. Click 'Run' to continue. (No need to type anything this time)",
+			instruction: "You see, I was right. Your tube is now at <span class='instructionNameText'>Elephant & Castle</span>, the last station on the <span class='instructionNameText'>Bakerloo</span> line. Not only that, but after moving forward past all 16 stations on the Bakerloo line, your program stopped and and if this was eny other lesson, an error would be displayed. This is not a good thing, because you may have other instructions that come after your <span class='instructionCodeText'>repeat 50 times</span> code. If your program stops, those instructions will not be run. Click 'Run' to continue. (No need to type anything this time)",
 			stepSuccess: true,
 			startStation: 'elephant & castle',
 			stations: [],
@@ -168,7 +180,7 @@ var stages = [
 			objectToUse: bakerloo
 		},
 		{
-			instruction: "If you guessed that the tube would continue backwards until the start of the line then stop, then you were right! What the code does is move the tube <span class='instructionCodeText'>backwards whilst</span> the tube can move backwards (<span class='instructionCodeText'>canMoveBackwards</span>).  Any lines between the <span class='instructionCodeText'>while</span> and <span class='instructionCodeText'>end while</span> will be run until the tube can no longer move backwards. No error messages appear for this method and any code after the <span class='instructionCodeText'>end while</span> will still be run - thats a really good thing. Click 'Run' to continue. (No need to type anything).",
+			instruction: "If you guessed that the tube would continue backwards until the start of the line then stop, then you were right! What the code does is move the tube <span class='instructionCodeText'>backwards whilst</span> the tube can move backwards (<span class='instructionCodeText'>canMoveBackwards</span>).  Any lines between the <span class='instructionCodeText'>while</span> and <span class='instructionCodeText'>end while</span> will be run until the tube can no longer move backwards. No error messages appear for this method and any code after the <span class='instructionCodeText'>end while</span> will still be run - that's a really good thing. Click 'Run' to continue. (No need to type anything).",
 			stepSuccess: true,
 			startStation: 'harrow & wealdstone',
 			stations: [],
