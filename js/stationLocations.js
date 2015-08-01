@@ -1,7 +1,22 @@
+/*
+stationLocations.js
+
+This file contains several objects, one for each map image used by RailCode
+Each object contains the path to the map image it is linked to and a list of
+stations on the line, with their X and Y coordinates on the map image
+
+Some of the locations arrays are multidimensional due to our way of
+representing junctions and splits in the London Underground
+
+If the image the object is representing has more than one line in it
+(e.g: the districtPiccadilly object links to an image that contains both
+the District and Piccadilly lines) then the lines array in each object will
+contain more than one element
+
+*/
+
 var bakerloo = {
 	image: "/maps/bakerloo.png",
-	startLine: 0,
-	startStation: "harrow & wealdstone",
 	lines: [
 		{
 			name: "bakerloo",
@@ -38,8 +53,6 @@ var bakerloo = {
 
 var waterloo = {
 	image: "/maps/waterloo.png",
-	startLine: 0,
-	startStation: "bank",
 	lines: [
 		{
 			name: "waterloo and city",
@@ -53,8 +66,6 @@ var waterloo = {
 
 var hammersmith = {
 	image: "/maps/hammersmith.png",
-	startLine: 0,
-	startStation: "hammersmith",
 	lines: [
 		{
 			name: "hammersmith and city",
@@ -80,8 +91,6 @@ var hammersmith = {
 
 var jubilee = {
 	image: "/maps/jubilee.png",
-	startLine: 0,
-	startStation: "westminster",
 	lines: [
 		{
 			name: "jubilee",
@@ -104,8 +113,6 @@ var jubilee = {
 
 var district = {
 	image: "/maps/district.png",
-	startLine: 0,
-	startStation: "ealing broadway",
 	lines: [
 		{
 			name: "district",
@@ -132,8 +139,6 @@ var district = {
 
 var districtPiccadilly = {
 	image: "/maps/districtPiccadilly.png",
-	startLine: 0,
-	startStation: "ealing broadway",
 	lines: [
 		{
 			name: "district",
@@ -175,8 +180,6 @@ var districtPiccadilly = {
 
 var districtPiccadillyCircle = {
 	image: "/maps/districtPiccadillyCircle.png",
-	startLine: 0,
-	startStation: "ealing broadway",
 	lines: [
 		{
 			name: "district",
@@ -229,8 +232,6 @@ var districtPiccadillyCircle = {
 
 var multiple = {
 	image: "/maps/multiple.png",
-	startLine: 0,
-	startStation: "white city",
 	lines: [
 		{
 			name: "central",
@@ -306,8 +307,6 @@ var multiple = {
 
 var multiple2 = {
 	image: "/maps/multiple2.png",
-	startLine: 0,
-	startStation: "sloane square",
 	lines: [
 		{
 			name: "circle",
@@ -415,5 +414,3 @@ var multiple2 = {
 		}
 	]
 }
-
-var lessons = [district, hammersmith]
