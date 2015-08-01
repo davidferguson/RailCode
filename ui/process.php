@@ -99,8 +99,15 @@
 			$code = mysql_real_escape_string($_GET["code"]);
 			$points = mysql_real_escape_string($_GET["points"]);
 			$challengeId = mysql_real_escape_string($_GET["challengeId"]);
-			$dbresult = mysql_query("INSERT INTO `solutions` (userid, challengeId, code, points) VALUES ('" . $_SESSION["id"] . "', '" . $challengeId . "', '" . $code . "', '" . $points . "')");
-			if( $dbresult )
+			
+			$dbresult = mysql_query("SELECT * FROM `users` WHERE id='" . $_SESSION["id"] . "'");
+			$dbresult = mysql_fetch_array( $dbresult, MYSQL_ASSOC );
+			$userPoints = $dbresult["points"];
+			$userPoints = $userPoints + $points;
+			
+			$dbresult1 = mysql_query("UPDATE users SET points='" . $userPoints . "' WHERE id='" . $_SESSION["id"] . "'");
+			$dbresult2 = mysql_query("INSERT INTO `solutions` (userid, challengeId, code, points) VALUES ('" . $_SESSION["id"] . "', '" . $challengeId . "', '" . $code . "', '" . $points . "')");
+			if( $dbresult2 )
 			{
 				echo 1;
 			}
@@ -108,6 +115,36 @@
 			{
 				echo 0;
 			}
+			break;
+		case "getUserList":
+			$challengeId = $_GET["challengeId"];
+			
+			dbConnect();
+			$solutions = mysql_query( "select * from solutions WHERE challengeId='" . $challengeId . "' ORDER BY points DESC" );
+			
+			while( $solution = mysql_fetch_array( $solutions, MYSQL_ASSOC ) )
+			{
+				$user = $solution['userid'];
+				$dbresult = mysql_query("SELECT * FROM `users` WHERE id='" . $user . "'");
+				$dbresult = mysql_fetch_array( $dbresult, MYSQL_ASSOC );
+				$username = $dbresult["username"];
+				
+				$code = base64_decode($solution['code']);
+				$points = $solution['points'];
+				echo '<a class="list-group-item" onclick=\'showUserCode(' . $solution["id"] . ');\'><span class="badge">' . $points . '</span>' . $username . '</a>';
+			}
+			
+			break;
+		case "getUserCode":
+			$solutionId = $_GET["solutionId"];
+			
+			dbConnect();
+			$dbresult = mysql_query( "select * from solutions WHERE id='" . $solutionId . "'" );
+			$dbresult = mysql_fetch_array( $dbresult, MYSQL_ASSOC );
+			$code = base64_decode($dbresult["code"]);
+		
+			echo $code;
+			
 			break;
 	}
 ?>
