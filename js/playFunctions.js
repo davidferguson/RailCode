@@ -346,7 +346,7 @@ function startChallenge( usersPoints, callback )
 	challengeNameToSend = encode64(challengeNameToSend);
 	// Challenge specific stuff
 	var openDataToSave = encodeURIComponent( JSON.stringify(closedStationList).toString() );
-	var activityToSave = encodeURIComponent( JSON.stringify(currentActivity).toString() );
+	var activityToSave = encodeURIComponent( encode64(JSON.stringify(currentActivity).toString()) );
 	var startLineToSave = encode64( playStartLine.toString() );
 	var startStationToSave = encode64( playStartStation );
 	var endStationToSave = encode64( playFinishedStation );
