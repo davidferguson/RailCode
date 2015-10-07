@@ -1,19 +1,7 @@
 <?php
 	session_start();
-	
-	function dbConnect()
-	{
-		$dbConn = mysql_connect('localhost', 'balgreen_railcod', 'verySecret');
-		if ( ! $dbConn )
-		{
-			die("Unable to connect to database: " . mysql_error());
-		}
-		$db_selected = mysql_select_db('balgreen_railcode', $dbConn);
-		if ( ! $db_selected )
-		{
-			die ("Unable to select database: " . mysql_error());
-		}
-	}
+	require('mysql_connect.php');
+	dbConnect();
 	
 	if( ! isset($_SESSION["email"]) )
 	{
