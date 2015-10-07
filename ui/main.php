@@ -85,6 +85,10 @@
 				left: 0px;
 				z-index: 1000;
 			}
+			#compileButton {
+				font-weight: bold;
+				font-size: 200%;
+			}
 			textarea {
 				width: 100%;
 				height: 100%;
@@ -105,6 +109,7 @@
 				font-weight: bold;
 				font-family: monospace;
 			}
+			
 		</style>
 	</head>
 	<body>
@@ -140,7 +145,7 @@
 						<textarea id="railcodeCode"></textarea>
 					</div>
 					<div id="codeButtons" style="width: 100%; height: 15%;">
-						<button id="" style="width: 100%; height: 100%;" onclick="compileAndRun();">Run</button>
+						<button id="compileButton" style="width: 100%; height: 100%;" onclick="compileAndRun();">Run</button>
 					</div>
 				</div>
 				<div class="col-md-8" id="mapPanel">
