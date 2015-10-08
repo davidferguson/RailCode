@@ -143,7 +143,7 @@ function displayCorrect( codePoints )
 	if( mode == "play" )
 	{
 		document.getElementById('trainInfoPanel').innerHTML = 'Well Done! You got that spot on, and your code added <b>' + codePoints + '</b> points to your highscore!</br>If you want, you can save your solution as a challenge which will allow your friends to try and beat your code score!';
-		document.getElementById('codeButtons').innerHTML = '<button style="width: 40%; height: 100%; background-color: #F5ECCE;" onclick="startChallenge(' + codePoints + ');">Save Solution as Challenge</button><button style="width: 60%; height: 100%; background-color: #BCF5A9;" onclick="nextStep();">Continue</button>';
+		document.getElementById('codeButtons').innerHTML = '<button style="width: 40%; height: 100%; background-color: #F5ECCE; font-size: 65%;" onclick="startChallenge(' + codePoints + ');">Save as Challenge</button><button style="width: 60%; height: 100%; background-color: #BCF5A9;" onclick="nextStep();">Continue</button>';
 	}
 	else if( mode == "challenge" )
 	{
@@ -186,7 +186,7 @@ function displayIncorrect(error)
 		document.getElementById('trainInfoPanel').innerHTML = "Oh dear! That didn't quite work. " + error + ' ' + stages[currentStage].step[currentStep].customError;
 	}
 	document.getElementById('trainInfoPanel').style.backgroundColor = '#F5A9A9';
-	document.getElementById('codeButtons').innerHTML = '<button style="width: 100%; height: 100%; background-color: #F5A9A9;" onclick="retryStep();">Retry</button>';
+	document.getElementById('codeButtons').innerHTML = '<button id="compileButton" style="width: 100%; height: 100%; background-color: #F5A9A9;" onclick="retryStep();">Retry</button>';
 }
 
 function nextStep()
