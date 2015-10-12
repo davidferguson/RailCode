@@ -327,7 +327,7 @@ function playSetup()
 	*/
 	currentLine = playStartLine;
 	currentStationName = playStartStation;
-	moveTrainToStation( currentStationName );
+	challengeSetup();
 }
 
 function startChallenge( usersPoints, callback )

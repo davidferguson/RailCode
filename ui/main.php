@@ -1,19 +1,7 @@
 <?php
 	session_start();
-	
-	function dbConnect()
-	{
-		$dbConn = mysql_connect('localhost', 'balgreen_railcod', 'verySecret');
-		if ( ! $dbConn )
-		{
-			die("Unable to connect to database: " . mysql_error());
-		}
-		$db_selected = mysql_select_db('balgreen_railcode', $dbConn);
-		if ( ! $db_selected )
-		{
-			die ("Unable to select database: " . mysql_error());
-		}
-	}
+	require('mysql_connect.php');
+	dbConnect();
 	
 	if( ! isset($_SESSION["email"]) )
 	{
@@ -85,7 +73,7 @@
 				left: 0px;
 				z-index: 1000;
 			}
-			#compileButton {
+			#codeButtons {
 				font-weight: bold;
 				font-size: 200%;
 			}
@@ -144,8 +132,8 @@
 					<div id="codeBox" style="width: 100%; height: calc(75% - 30px);">
 						<textarea id="railcodeCode"></textarea>
 					</div>
-					<div id="codeButtons" style="width: 100%; height: 15%;">
-						<button id="compileButton" style="width: 100%; height: 100%;" onclick="compileAndRun();">Run</button>
+					<div id="codeButtons" style="width: 100%; height: 15%; font-size: 200%;">
+						<button style="width: 100%; height: 100%;" onclick="compileAndRun();">Run</button>
 					</div>
 				</div>
 				<div class="col-md-8" id="mapPanel">
