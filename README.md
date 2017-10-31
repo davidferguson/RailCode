@@ -12,7 +12,7 @@ may seem scary, not fun. RailCode introduces programming
 in a game-like format, allowing people to program without 
 even realising that they are programming!
 
-[Visit RailCode.tk](http://railcode.tk) to find out more...
+[Visit RailCode.tk](http://web.archive.org/web/20160320212018/http://railcode.tk/ui/home.php) to find out more...
 
 
 ## Contributing
