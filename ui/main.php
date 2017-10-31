@@ -33,9 +33,9 @@
 				text-align: center;
 			}
 			#trainInfoPanel {
-				height: 15%;
+				/* height: 15%; */
 				background-color: #F3F781;
-				overflow-y: scroll;
+				/* overflow-y: scroll; */
 				padding-top: 5px;
 				padding-bottom: 5px;
 				padding-left: 10px;
